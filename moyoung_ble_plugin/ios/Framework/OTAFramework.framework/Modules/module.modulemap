@@ -1,6 +1,0 @@
-framework module OTAFramework {
-  umbrella header "OTAFramework.h"
-
-  export *
-  module * { export * }
-}
