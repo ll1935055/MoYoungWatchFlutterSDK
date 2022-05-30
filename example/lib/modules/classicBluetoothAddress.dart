@@ -2,34 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:moyoung_ble_plugin/moyoung_ble.dart';
 
 class ClassicBluetoothAddressPage extends StatefulWidget {
-  MoYoungBle blePlugin;
+  final MoYoungBle blePlugin;
 
-  ClassicBluetoothAddressPage({
+  const ClassicBluetoothAddressPage({
     Key? key,
     required this.blePlugin,
   }) : super(key: key);
 
   @override
   State<ClassicBluetoothAddressPage> createState() {
-    return _classicBluetoothAddressPage(blePlugin);
+    return _ClassicBluetoothAddressPage(blePlugin);
   }
 }
 
-class _classicBluetoothAddressPage extends State<ClassicBluetoothAddressPage> {
+class _ClassicBluetoothAddressPage extends State<ClassicBluetoothAddressPage> {
   final MoYoungBle _blePlugin;
+  String _address = "";
 
-  _classicBluetoothAddressPage(this._blePlugin);
+  _ClassicBluetoothAddressPage(this._blePlugin);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("ClassicBluetoothAddressPage"),
+              title: const Text("Classic Bluetooth Address Page"),
             ),
             body: Center(child: ListView(children: <Widget>[
+              Text("address: $_address"),
+
               ElevatedButton(
-                  onPressed: () => _blePlugin.queryBtAddress,
+                  onPressed: () => setState(() async {
+                    _address = await _blePlugin.queryBtAddress;
+                  }),
                   child: const Text("queryBtAddress()")),
             ])
             )

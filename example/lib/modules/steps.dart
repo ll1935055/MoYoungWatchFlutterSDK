@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:moyoung_ble_plugin/moyoung_ble.dart';
-import 'package:logger/logger.dart';
 import 'dart:async';
 
 class StepsPage extends StatefulWidget {
-  MoYoungBle blePlugin;
+  final MoYoungBle blePlugin;
 
-  StepsPage({
+  const StepsPage({
     Key? key,
     required this.blePlugin
   }) : super(key: key);
 
   @override
   State<StepsPage> createState() {
-    return _stepsPage(blePlugin);
+    return _StepsPage(blePlugin);
   }
 }
 
-class _stepsPage extends State<StepsPage> {
+class _StepsPage extends State<StepsPage> {
   final MoYoungBle _blePlugin;
-  Logger logger = Logger();
   final _streamSubscriptions = <StreamSubscription<dynamic>>[];
-  int _stepChange = -1;
+  int _stepsChange = -1;
 
-  _stepsPage(this._blePlugin);
+  _StepsPage(this._blePlugin);
 
   @override
   void initState() {
@@ -34,9 +32,19 @@ class _stepsPage extends State<StepsPage> {
   void subscriptStream() {
     _streamSubscriptions.add(
       _blePlugin.stepsChangeEveStm.listen(
-            (StepChangeBean event) {
+            (StepsChangeBean event) {
           setState(() {
-            _stepChange = event.stepInfo.steps;
+            _stepsChange = event.stepsInfo.steps;
+          });
+        },
+      ),
+    );
+
+    _streamSubscriptions.add(
+      _blePlugin.stepsDetailEveStm.listen(
+            (StepsDetailBean event) {
+          setState(() {
+
           });
         },
       ),
@@ -56,22 +64,22 @@ class _stepsPage extends State<StepsPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("StepsPage"),
+              title: const Text("Steps Page"),
             ),
             body: Center(
               child: ListView(
                 children: [
-                  Text("StepsChange=" + _stepChange.toString()),
+                  Text("StepsChange=" + _stepsChange.toString()),
 
                   ElevatedButton(
-                      child: const Text('syncStep'),
-                      onPressed: () => _blePlugin.syncSteps),
+                      child: const Text('querySteps'),
+                      onPressed: () => _blePlugin.querySteps),
                   ElevatedButton(
-                      child: const Text('syncPastStep(YESTERDAY_STEPS)'),
-                      onPressed: () => _blePlugin.syncHistorySteps(StepsCategoryDateType.TODAY_STEPS_CATEGORY)),
+                      child: const Text('queryHistorySteps(todayStepsDetail)'),
+                      onPressed: () => _blePlugin.queryHistorySteps(StepsDetailDateType.todayStepsDetail)),
                   ElevatedButton(
-                      child: const Text('queryStepsCategory(CRPStepsCategoryDateType)'),
-                      onPressed: () => _blePlugin.queryStepsCategory(StepsCategoryDateType.TODAY_STEPS_CATEGORY)),
+                      child: const Text('queryHistorySteps(todayStepsDetail)'),
+                      onPressed: () => _blePlugin.queryStepsDetail(StepsDetailDateType.todayStepsDetail)),
                 ],
               ),
             )

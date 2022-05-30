@@ -2,30 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:moyoung_ble_plugin/moyoung_ble.dart';
 
 class FindPhonePage extends StatefulWidget {
-  MoYoungBle blePlugin;
+  final MoYoungBle blePlugin;
 
-  FindPhonePage({
+  const FindPhonePage({
     Key? key,
     required this.blePlugin,
   }) : super(key: key);
 
   @override
   State<FindPhonePage> createState() {
-    return _findPhonePage(blePlugin);
+    return _FindPhonePage(blePlugin);
   }
 }
 
-class _findPhonePage extends State<FindPhonePage> {
+class _FindPhonePage extends State<FindPhonePage> {
   final MoYoungBle _blePlugin;
 
-  _findPhonePage(this._blePlugin);
+  _FindPhonePage(this._blePlugin);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("FindPhonePage"),
+              title: const Text("Find Phone Page"),
             ),
             body: Center(child: ListView(children: <Widget>[
               ElevatedButton(

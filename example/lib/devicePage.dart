@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:moyoung_ble_plugin/moyoung_ble.dart';
 
 import 'package:moyoung_ble_plugin_example/modules/protoclVersion.dart';
 import 'package:moyoung_ble_plugin_example/modules/quickView.dart';
@@ -17,55 +18,52 @@ import 'package:moyoung_ble_plugin_example/modules/unitsystem.dart';
 import 'package:moyoung_ble_plugin_example/modules/userInfo.dart';
 import 'package:moyoung_ble_plugin_example/modules/watchFace.dart';
 import 'package:moyoung_ble_plugin_example/modules/weather.dart';
+import 'package:moyoung_ble_plugin_example/modules/BloodOxygen.dart';
+import 'package:moyoung_ble_plugin_example/modules/ClassicBluetoothAddress.dart';
+import 'package:moyoung_ble_plugin_example/modules/ECG.dart';
+import 'package:moyoung_ble_plugin_example/modules/FindWatch.dart';
+import 'package:moyoung_ble_plugin_example/modules/Language.dart';
+import 'package:moyoung_ble_plugin_example/modules/MusicPlayer.dart';
+import 'package:moyoung_ble_plugin_example/modules/PillReminder.dart';
+import 'package:moyoung_ble_plugin_example/modules/RSSI.dart';
+import 'package:moyoung_ble_plugin_example/modules/TapWake.dart';
+import 'package:moyoung_ble_plugin_example/modules/Training.dart';
+import 'package:moyoung_ble_plugin_example/modules/alarm.dart';
+import 'package:moyoung_ble_plugin_example/modules/battery.dart';
+import 'package:moyoung_ble_plugin_example/modules/batterySaving.dart';
+import 'package:moyoung_ble_plugin_example/modules/bloodPressurePage.dart';
+import 'package:moyoung_ble_plugin_example/modules/bodyTemperature.dart';
+import 'package:moyoung_ble_plugin_example/modules/breathingLight.dart';
+import 'package:moyoung_ble_plugin_example/modules/brightness.dart';
+import 'package:moyoung_ble_plugin_example/modules/contacts.dart';
+import 'package:moyoung_ble_plugin_example/modules/displayTime.dart';
+import 'package:moyoung_ble_plugin_example/modules/drinkWaterReminder.dart';
+import 'package:moyoung_ble_plugin_example/modules/findPhone.dart';
+import 'package:moyoung_ble_plugin_example/modules/firmware.dart';
+import 'package:moyoung_ble_plugin_example/modules/goalSteps.dart';
+import 'package:moyoung_ble_plugin_example/modules/handWashingReminder.dart';
+import 'package:moyoung_ble_plugin_example/modules/heartRate.dart';
+import 'package:moyoung_ble_plugin_example/modules/heartRateAlarm.dart';
+import 'package:moyoung_ble_plugin_example/modules/menstrualCycle.dart';
+import 'package:moyoung_ble_plugin_example/modules/movementTraining.dart';
+import 'package:moyoung_ble_plugin_example/modules/notDisturb.dart';
+import 'package:moyoung_ble_plugin_example/modules/notification.dart';
 
-import 'package:moyoung_ble_plugin/moyoung_ble.dart';
+class DevicePage extends StatefulWidget {
+  final BleScanBean device;
 
-import 'modules/BloodOxygen.dart';
-import 'modules/ClassicBluetoothAddress.dart';
-import 'modules/ECG.dart';
-import 'modules/FindWatch.dart';
-import 'modules/Language.dart';
-import 'modules/MusicPlayer.dart';
-import 'modules/PillReminder.dart';
-import 'modules/RSSI.dart';
-import 'modules/TapWake.dart';
-import 'modules/Training.dart';
-import 'modules/alarm.dart';
-import 'modules/battery.dart';
-import 'modules/batterySaving.dart';
-import 'modules/bloodPressurePage.dart';
-import 'modules/bodyTemperature.dart';
-import 'modules/breathingLight.dart';
-import 'modules/brightness.dart';
-import 'modules/contacts.dart';
-import 'modules/displayTime.dart';
-import 'modules/drinkWaterReminder.dart';
-import 'modules/findPhone.dart';
-import 'modules/firmware.dart';
-import 'modules/goalSteps.dart';
-import 'modules/handWashingReminder.dart';
-import 'modules/heartRate.dart';
-import 'modules/heartRateAlarm.dart';
-import 'modules/menstrualCycle.dart';
-import 'modules/movementTraining.dart';
-import 'modules/notDisturb.dart';
-import 'modules/notification.dart';
-
-class NewRoute extends StatefulWidget {
-  BleScanBean device;
-
-  NewRoute({
+  const DevicePage({
     Key? key,
     required this.device,
   }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _NewRoute(device);
+    return _DevicePage(device);
   }
 }
 
-class _NewRoute extends State<NewRoute> {
+class _DevicePage extends State<DevicePage> {
   late BleScanBean device;
 
   final _streamSubscriptions = <StreamSubscription<dynamic>>[];
@@ -77,7 +75,7 @@ class _NewRoute extends State<NewRoute> {
   Logger logger = Logger();
   String oTAType="";
 
-  _NewRoute(this.device);
+  _DevicePage(this.device);
 
   @override
   void initState() {
@@ -91,190 +89,6 @@ class _NewRoute extends State<NewRoute> {
         (int event) {
           setState(() {
             _connetionState = event;
-          });
-        },
-      ),
-    );
-
-    _streamSubscriptions.add(
-      _blePlugin.deviceBatteryEveStm.listen(
-        (DeviceBatteryBean event) {
-          setState(() {
-            // _connStepChange = event;
-          });
-        },
-      ),
-    );
-
-    _streamSubscriptions.add(
-      _blePlugin.weatherChangeEveStm.listen(
-        (int event) {
-          setState(() {
-            // _connStepChange = event;
-          });
-        },
-      ),
-    );
-
-    _streamSubscriptions.add(
-      _blePlugin.stepsCategoryEveStm.listen(
-        (StepsCategoryBean event) {
-          setState(() {
-            // _connStepChange = event;
-          });
-        },
-      ),
-    );
-    _streamSubscriptions.add(
-      _blePlugin.sleepChangeEveStm.listen(
-        (SleepBean event) {
-          setState(() {
-            // _connStepChange = event;
-          });
-        },
-      ),
-    );
-    _streamSubscriptions.add(
-      _blePlugin.firmwareUpgradeEveStm.listen(
-        (FirmwareUpgradeBean event) {
-          setState(() {
-            // _connStepChange = event;
-          });
-        },
-      ),
-    );
-
-    _streamSubscriptions.add(
-      _blePlugin.bloodPressureEveStm.listen(
-        (event) {
-          setState(() {
-            logger.d('connBloodPressureEveStm===' + event.bloodPressureChange.toString());
-          });
-        },
-      ),
-    );
-    _streamSubscriptions.add(
-      _blePlugin.bloodOxygenEveStm.listen(
-        (event) {
-          setState(() {
-            logger.d('connBloodOxygenEveStm===' + event.bloodOxygen.toString());
-          });
-        },
-      ),
-    );
-    _streamSubscriptions.add(
-      _blePlugin.cameraEveStm.listen(
-        (event) {
-          setState(() {
-            logger.d('connCameraEveStm');
-          });
-        },
-      ),
-    );
-    _streamSubscriptions.add(
-      _blePlugin.phoneEveStm.listen(
-        (event) {
-          setState(() {
-            logger.d('connPhoneEveStm===' + event.toString());
-          });
-        },
-      ),
-    );
-    _streamSubscriptions.add(
-      _blePlugin.deviceRssiEveStm.listen(
-        (event) {
-          setState(() {
-            logger.d('connDeviceRssiEveStm===' + event.toString());
-          });
-        },
-      ),
-    );
-
-    var lazyFileTransEveStm = _blePlugin.lazyFileTransEveStm.listen(
-          (WatchFaceBgProgressBean event) {
-        setState(() {
-          logger.d('connLazyFileTransEveStm===' + event.toString());
-        });
-      },
-    );
-    lazyFileTransEveStm.onError((error) {
-      print(error.toString());
-    });
-    _streamSubscriptions.add(lazyFileTransEveStm);
-
-    _streamSubscriptions.add(
-      _blePlugin.lazyWFFileTransEveStm.listen(
-        (FileTransLazyBean event) {
-          setState(() {
-            logger.d('connLazyWFFileTransEveStm===' + event.toString());
-          });
-        },
-      ),
-    );
-    _streamSubscriptions.add(
-      _blePlugin.lazyEcgEveStm.listen(
-        (event) {
-          setState(() {
-            logger.d('connLazyEcgEveStm===' + event.ints.toString());
-          });
-        },
-      ),
-    );
-    _streamSubscriptions.add(
-      _blePlugin.lazyContactAvatarEveStm.listen(
-        (FileTransLazyBean event) {
-          setState(() {
-            logger.d('connLazyContactAvatarEveStm===' + event.toString());
-          });
-        },
-      ),
-    );
-
-    _streamSubscriptions.add(
-      _blePlugin.movementStateEveStm.listen(
-        (event) {
-          setState(() {
-            logger.d("connTainStateEveStm======" + event.toString());
-          });
-        },
-      ),
-    );
-
-    _streamSubscriptions.add(
-      _blePlugin.tempChangeEveStm.listen(
-        (TempChangeBean event) {
-          setState(() {
-            logger.d("connTempChangeEveStm======" + event.toString());
-          });
-        },
-      ),
-    );
-
-    _streamSubscriptions.add(
-      _blePlugin.contactEveStm.listen(
-        (ContactListenBean event) {
-          setState(() {
-            logger.d("connContactEveStm======" + event.toString());
-          });
-        },
-      ),
-    );
-
-    _streamSubscriptions.add(
-      _blePlugin.batterySavingEveStm.listen(
-        (event) {
-          setState(() {
-            logger.d("connBatterySavingEveStm======" + event.toString());
-          });
-        },
-      ),
-    );
-
-    _streamSubscriptions.add(
-      _blePlugin.trainingEveStm.listen(
-        (TrainBean event) {
-          setState(() {
-            logger.d("connTrainingEveStm======" + event.toString());
           });
         },
       ),
@@ -294,16 +108,14 @@ class _NewRoute extends State<NewRoute> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: const Text('Device Page'),
         ),
         body: Center(
           child: ListView(
             children: <Widget>[
               Text(device.name + ',' + device.address),
 
-              // Text("StepsChange=" + _connStepChange.stepInfo.steps.toString()),
-
-              Text('connetionState= $_connetionState'),
+              Text('connectionState= $_connetionState'),
 
               ElevatedButton(
                   child: const Text('isConnected()'),
@@ -322,7 +134,11 @@ class _NewRoute extends State<NewRoute> {
                     isConn = false;
                     _blePlugin.disconnect;
                   }),
-              const Text("Module functions are as follows"),
+              const Text("Module functions are as follows:",
+              style: TextStyle(
+                fontSize: 20,
+                height: 2.0,
+              )),
               ElevatedButton(
                   onPressed: () {
                     if(isConn) {
@@ -696,7 +512,7 @@ class _NewRoute extends State<NewRoute> {
                           }));
                     }
                   },
-                  child: const Text("2.36-MovementTraining")),
+                  child: const Text("2.36-Training")),
               ElevatedButton(
                   onPressed: () {
                     if(isConn) {
@@ -853,7 +669,6 @@ class _NewRoute extends State<NewRoute> {
                     }
                   },
                   child: const Text("2.49-Training")),
-              // libaozhong: end
             ],
           ),
         ),

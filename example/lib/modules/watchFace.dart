@@ -1,72 +1,113 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:flutter/services.dart';
 import 'package:moyoung_ble_plugin/moyoung_ble.dart';
 import 'package:path_provider/path_provider.dart';
 
 class WatchFacePage extends StatefulWidget {
-  MoYoungBle blePlugin;
+  final MoYoungBle blePlugin;
 
-  WatchFacePage({Key? key, required this.blePlugin}) : super(key: key);
+  const WatchFacePage({Key? key, required this.blePlugin}) : super(key: key);
 
   @override
   State<WatchFacePage> createState() {
-    return _watchFacePage(blePlugin);
+    return _WatchFacePage(blePlugin);
   }
 }
 
-class _watchFacePage extends State<WatchFacePage> {
+class _WatchFacePage extends State<WatchFacePage> {
   final MoYoungBle _blePlugin;
-  WatchFaceLayoutBean? _crpWatchFaceLayoutInfo = null;
+  WatchFaceLayoutBean? _watchFaceLayoutInfo;
   String _firmwareVersion = "";
-  SupportWatchFaceBean? _crpSupportWatchFaceInfo = null;
+  SupportWatchFaceBean? _crpSupportWatchFaceInfo;
   List<WatchFaceBean> _watchFacelist = [];
+  final _streamSubscriptions = <StreamSubscription<dynamic>>[];
+  Logger logger = Logger();
+  int _progress = -1;
+  int _error = -1;
 
-  _watchFacePage(this._blePlugin);
+  _WatchFacePage(this._blePlugin);
+
+  @override
+  void initState() {
+    super.initState();
+    subscriptStream();
+  }
+
+  void subscriptStream() {
+    var fileTransEveStm = _blePlugin.fileTransEveStm.listen(
+          (WatchFaceBgProgressBean event) {
+        setState(() {
+          logger.d('fileTransEveStm===' + event.toString());
+        });
+      },
+    );
+    fileTransEveStm.onError((error) {
+      logger.d(error.toString());
+    });
+    _streamSubscriptions.add(fileTransEveStm);
+
+    _streamSubscriptions.add(
+      _blePlugin.wfFileTransEveStm.listen(
+            (FileTransBean event) {
+          setState(() {
+            logger.d('WFFileTransEveStm===' + event.toString());
+            _progress = event.progress;
+            _error = event.error;
+          });
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("WatchFacePage"),
+              title: const Text("WatchFace Page"),
             ),
             body: Center(child: ListView(children: [
+              Text("progress: $_progress"),
+              Text("error: $_error"),
+
               ElevatedButton(
                   child: const Text('sendDisplayWatchFace(FIRST_WATCH_FACE)'),
                   onPressed: () => _blePlugin
-                      .sendDisplayWatchFace(WatchFaceType.FIRST_WATCH_FACE)),
+                      .sendDisplayWatchFace(WatchFaceType.firstWatchFace)),
               ElevatedButton(
                   child: const Text('sendDisplayWatchFace(SECOND_WATCH_FACE)'),
                   onPressed: () => _blePlugin
-                      .sendDisplayWatchFace(WatchFaceType.SECOND_WATCH_FACE)),
+                      .sendDisplayWatchFace(WatchFaceType.secondWatchFace)),
               ElevatedButton(
                   child: const Text('sendDisplayWatchFace(THIRD_WATCH_FACE)'),
                   onPressed: () => _blePlugin
-                      .sendDisplayWatchFace(WatchFaceType.THIRD_WATCH_FACE)),
+                      .sendDisplayWatchFace(WatchFaceType.thirdWatchFace)),
               ElevatedButton(
                   child: const Text('sendDisplayWatchFace(NEW_CUSTOMIZE_WATCH_FACE)'),
                   onPressed: () => _blePlugin
-                      .sendDisplayWatchFace(WatchFaceType.NEW_CUSTOMIZE_WATCH_FACE)),
+                      .sendDisplayWatchFace(WatchFaceType.newCustomizeWatchFace)),
               ElevatedButton(
                   child: const Text('queryDisplayWatchFace()'),
                   onPressed: () => _blePlugin.queryDisplayWatchFace),
               ElevatedButton(
                   child: const Text('queryWatchFaceLayout()'),
-                  onPressed: () async => _crpWatchFaceLayoutInfo = await _blePlugin.queryWatchFaceLayout),
+                  onPressed: () async => _watchFaceLayoutInfo = await _blePlugin.queryWatchFaceLayout),
               ElevatedButton(
                   child: const Text(
                       'sendWatchFaceLayout(CrpWatchFaceLayoutInfo(2)'),
                   onPressed: () => {
-                    if(_crpWatchFaceLayoutInfo != null) {
-                      _blePlugin.sendWatchFaceLayout(_crpWatchFaceLayoutInfo!)}
+                    if (_watchFaceLayoutInfo != null) {
+                      _blePlugin.sendWatchFaceLayout(_watchFaceLayoutInfo!)}
                   }),
               ElevatedButton(
                   child: const Text('sendWatchFaceBackground()'),
                   onPressed: () => {
-                    if(_crpWatchFaceLayoutInfo != null) {
+                    if (_watchFaceLayoutInfo != null) {
                       sendWatchFaceBackground()
                     }
                   }),
@@ -74,12 +115,12 @@ class _watchFacePage extends State<WatchFacePage> {
                   child: const Text('querySupportWatchFace()'),
                   onPressed: () async => _crpSupportWatchFaceInfo = await _blePlugin.querySupportWatchFace),
               ElevatedButton(
-                  child: Text(_firmwareVersion),
+                  child: const Text("queryFirmwareVersion()"),
                   onPressed: queryFrimwareVersion),
               ElevatedButton(
                   child: const Text('queryWatchFaceStore()'),
                   onPressed: () async => {
-                    if(_firmwareVersion != "" && _crpSupportWatchFaceInfo != null) {
+                    if (_firmwareVersion != "" && _crpSupportWatchFaceInfo != null) {
                       _watchFacelist = await _blePlugin.queryWatchFaceStore(
                           WatchFaceStoreBean(
                               watchFaceSupportList: _crpSupportWatchFaceInfo!.supportWatchFaceList,
@@ -90,7 +131,7 @@ class _watchFacePage extends State<WatchFacePage> {
               ElevatedButton(
                   child: const Text('queryWatchFaceOfID()'),
                   onPressed: () => {
-                    if(_crpSupportWatchFaceInfo != null) {
+                    if (_crpSupportWatchFaceInfo != null) {
                       _blePlugin.queryWatchFaceOfID(_crpSupportWatchFaceInfo!.displayWatchFace)
                     }
                   }),
@@ -111,18 +152,20 @@ class _watchFacePage extends State<WatchFacePage> {
     WatchFaceBackgroundBean bgBean=WatchFaceBackgroundBean(
       bitmap: logoUint8List,
       thumbBitmap: logoUint8List,
-      type:_crpWatchFaceLayoutInfo!.compressionType,
-      width: _crpWatchFaceLayoutInfo!.width,
-      height: _crpWatchFaceLayoutInfo!.height,
-      thumbWidth: _crpWatchFaceLayoutInfo!.thumWidth,
-      thumbHeight: _crpWatchFaceLayoutInfo!.thumHeight,
+      type:_watchFaceLayoutInfo!.compressionType,
+      width: _watchFaceLayoutInfo!.width,
+      height: _watchFaceLayoutInfo!.height,
+      thumbWidth: _watchFaceLayoutInfo!.thumWidth,
+      thumbHeight: _watchFaceLayoutInfo!.thumHeight,
     );
     _blePlugin.sendWatchFaceBackground(bgBean);
   }
 
   Future<void> queryFrimwareVersion() async {
     String firmwareVersion = await _blePlugin.queryFirmwareVersion;
-    if (!mounted) return;
+    if (!mounted) {
+      return;
+    }
     setState(() {
       _firmwareVersion = firmwareVersion;
     });
@@ -147,8 +190,9 @@ class _watchFacePage extends State<WatchFacePage> {
     Response response = await dio.download(watchFaceBean.file, pathFile);
 
     //call native interface
-    CustomizeWatchFaceBean info = CustomizeWatchFaceBean(
-        index: watchFaceBean.id, file: pathFile);
-    await _blePlugin.sendWatchFace(info,30);
+    CustomizeWatchFaceBean info =
+        CustomizeWatchFaceBean(index: watchFaceBean.id, file: pathFile);
+    await _blePlugin.sendWatchFace(
+        SendWatchFaceBean(watchFaceFlutterBean: info, timeout: 30));
   }
 }

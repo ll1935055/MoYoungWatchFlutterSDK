@@ -3,9 +3,9 @@ import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:moyoung_ble_plugin_example/modules/avatar.dart';
 
 class FlutterContactsExample extends StatefulWidget {
-  BuildContext pageContext;
+  final BuildContext pageContext;
 
-  FlutterContactsExample(this.pageContext);
+  const FlutterContactsExample({Key? key, required this.pageContext}) : super(key: key);
 
   @override
   _FlutterContactsExampleState createState() => _FlutterContactsExampleState(pageContext);
@@ -36,12 +36,16 @@ class _FlutterContactsExampleState extends State<FlutterContactsExample> {
   @override
   Widget build(BuildContext context) => MaterialApp(
       home: Scaffold(
-          appBar: AppBar(title: Text('flutter_contacts_example')),
+          appBar: AppBar(title: const Text('flutter_contacts_example')),
           body: _body()));
 
   Widget _body() {
-    if (_permissionDenied) return Center(child: Text('Permission denied'));
-    if (_contacts == null) return Center(child: CircularProgressIndicator());
+    if (_permissionDenied) {
+      return const Center(child: Text('Permission denied'));
+    }
+    if (_contacts == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
     return ListView.builder(
         itemCount: _contacts!.length,
         itemBuilder: (context, i) => ListTile(
@@ -58,7 +62,7 @@ class _FlutterContactsExampleState extends State<FlutterContactsExample> {
 
 class ContactPage extends StatelessWidget {
   final Contact contact;
-  ContactPage(this.contact);
+  const ContactPage({Key? key, required this.contact}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Scaffold(

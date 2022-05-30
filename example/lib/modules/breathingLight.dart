@@ -2,32 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:moyoung_ble_plugin/moyoung_ble.dart';
 
 class BreathingLightPage extends StatefulWidget {
-  MoYoungBle blePlugin;
+  final MoYoungBle blePlugin;
 
-  BreathingLightPage({
+  const BreathingLightPage({
     Key? key,
     required this.blePlugin,
   }) : super(key: key);
 
   @override
   State<BreathingLightPage> createState() {
-    return _breathingLightPage(blePlugin);
+    return _BreathingLightPage(blePlugin);
   }
 }
 
-class _breathingLightPage extends State<BreathingLightPage> {
+class _BreathingLightPage extends State<BreathingLightPage> {
   final MoYoungBle _blePlugin;
+  bool _breathingLight = false;
 
-  _breathingLightPage(this._blePlugin);
+  _BreathingLightPage(this._blePlugin);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("BreathingLightPage"),
+              title: const Text("Breathing Light Page"),
             ),
             body: Center(child: ListView(children: <Widget>[
+              Text("breathingLight: $_breathingLight"),
+
               ElevatedButton(
                   child: const Text('sendBreathingLight(false)'),
                   onPressed: () => _blePlugin.sendBreathingLight(false)),
@@ -36,7 +39,9 @@ class _breathingLightPage extends State<BreathingLightPage> {
                   onPressed: () => _blePlugin.sendBreathingLight(true)),
               ElevatedButton(
                   child: const Text('queryBreathingLight()'),
-                  onPressed: () => _blePlugin.queryBreathingLight),
+                  onPressed: () => setState(() async {
+                     _breathingLight = await _blePlugin.queryBreathingLight;
+                  })),
             ])
             )
         )

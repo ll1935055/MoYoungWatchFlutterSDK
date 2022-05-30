@@ -2,34 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:moyoung_ble_plugin/moyoung_ble.dart';
 
 class TapWakePage extends StatefulWidget {
-  MoYoungBle blePlugin;
+  final MoYoungBle blePlugin;
 
-  TapWakePage({
+  const TapWakePage({
     Key? key,
     required this.blePlugin,
   }) : super(key: key);
 
   @override
   State<TapWakePage> createState() {
-    return _tapWakePage(blePlugin);
+    return _TapWakePage(blePlugin);
   }
 }
 
-class _tapWakePage extends State<TapWakePage> {
+class _TapWakePage extends State<TapWakePage> {
   final MoYoungBle _blePlugin;
+  bool _enable = false;
 
-  _tapWakePage(this._blePlugin);
+  _TapWakePage(this._blePlugin);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("TapWakePage"),
+              title: const Text("Tap Wake Page"),
             ),
             body: Center(child: ListView(children: <Widget>[
+              Text("enable: $_enable"),
+
               ElevatedButton(
-                  onPressed: () => _blePlugin.queryWakeState,
+                  onPressed: () => setState(() async {
+                    _enable = await _blePlugin.queryWakeState;
+                  }),
                   child: const Text("queryWakeState()")),
               ElevatedButton(
                   onPressed: () => _blePlugin.sendWakeState(true),

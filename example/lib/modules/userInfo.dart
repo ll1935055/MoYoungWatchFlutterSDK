@@ -2,30 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:moyoung_ble_plugin/moyoung_ble.dart';
 
 class UserInfoPage extends StatefulWidget {
-  MoYoungBle blePlugin;
+  final MoYoungBle blePlugin;
 
-  UserInfoPage({
+  const UserInfoPage({
     Key? key,
     required this.blePlugin,
   }) : super(key: key);
 
   @override
   State<UserInfoPage> createState() {
-    return _userInfoPage(blePlugin);
+    return _UserInfoPage(blePlugin);
   }
 }
 
-class _userInfoPage extends State<UserInfoPage> {
+class _UserInfoPage extends State<UserInfoPage> {
   final MoYoungBle _blePlugin;
 
-  _userInfoPage(this._blePlugin);
+  _UserInfoPage(this._blePlugin);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
         appBar: AppBar(
-        title: const Text("UserInfoPage"),
+        title: const Text("UserInfo Page"),
     ),
     body: Center(
       child: ListView(

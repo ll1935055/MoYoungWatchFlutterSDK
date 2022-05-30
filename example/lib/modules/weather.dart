@@ -1,35 +1,60 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:moyoung_ble_plugin/moyoung_ble.dart';
 
 class WeatherPage extends StatefulWidget {
-  MoYoungBle blePlugin;
+  final MoYoungBle blePlugin;
 
-  WeatherPage({
+  const WeatherPage({
     Key? key,
     required this.blePlugin,
   }) : super(key: key);
 
   @override
   State<WeatherPage> createState() {
-    return _weatherPage(blePlugin);
+    return _WeatherPage(blePlugin);
   }
 }
 
-class _weatherPage extends State<WeatherPage> {
+class _WeatherPage extends State<WeatherPage> {
   final MoYoungBle _blePlugin;
 
-  _weatherPage(this._blePlugin);
+  final _streamSubscriptions = <StreamSubscription<dynamic>>[];
+  int _weather = -1;
+
+  _WeatherPage(this._blePlugin);
+
+  @override
+  void initState() {
+    super.initState();
+    subscriptStream();
+  }
+
+  void subscriptStream() {
+    _streamSubscriptions.add(
+      _blePlugin.weatherChangeEveStm.listen(
+            (int event) {
+          setState(() {
+            _weather = event;
+          });
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("WeatherPage"),
+              title: const Text("Weather Page"),
             ),
             body: Center(
               child: ListView(
                 children: [
+                  Text("weather：$_weather"),
+
                   ElevatedButton(
                       child: const Text('sendTodayWeather()'),
                       onPressed: () => _blePlugin.sendTodayWeather(

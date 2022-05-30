@@ -2,30 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:moyoung_ble_plugin/moyoung_ble.dart';
 
 class ShutDownPage extends StatefulWidget {
-  MoYoungBle blePlugin;
+  final MoYoungBle blePlugin;
 
-  ShutDownPage({
+  const ShutDownPage({
     Key? key,
     required this.blePlugin,
   }) : super(key: key);
 
   @override
   State<ShutDownPage> createState() {
-    return _shutDownPage(blePlugin);
+    return _ShutDownPage(blePlugin);
   }
 }
 
-class _shutDownPage extends State<ShutDownPage> {
+class _ShutDownPage extends State<ShutDownPage> {
   final MoYoungBle _blePlugin;
 
-  _shutDownPage(this._blePlugin);
+  _ShutDownPage(this._blePlugin);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("ShutDownPage"),
+              title: const Text("Shut Down Page"),
             ),
             body: Center(child: ListView(children: <Widget>[
               ElevatedButton(

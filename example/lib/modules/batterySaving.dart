@@ -1,33 +1,60 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:moyoung_ble_plugin/moyoung_ble.dart';
 
 class BatterySavingPage extends StatefulWidget {
-  MoYoungBle blePlugin;
+  final MoYoungBle blePlugin;
 
-  BatterySavingPage({
+  const BatterySavingPage({
     Key? key,
     required this.blePlugin,
   }) : super(key: key);
 
   @override
   State<BatterySavingPage> createState() {
-    return _batterySavingPage(blePlugin);
+    return _BatterySavingPage(blePlugin);
   }
 }
 
-class _batterySavingPage extends State<BatterySavingPage> {
+class _BatterySavingPage extends State<BatterySavingPage> {
   final MoYoungBle _blePlugin;
+  final _streamSubscriptions = <StreamSubscription<dynamic>>[];
+  bool _batterSaving = false;
+  Logger logger = Logger();
 
-  _batterySavingPage(this._blePlugin);
+  _BatterySavingPage(this._blePlugin);
+
+  @override
+  void initState() {
+    super.initState();
+    subscriptStream();
+  }
+
+  void subscriptStream() {
+    _streamSubscriptions.add(
+      _blePlugin.batterySavingEveStm.listen(
+            (event) {
+          setState(() {
+            logger.d("BatterySavingEveStm======" + event.toString());
+            _batterSaving = event;
+          });
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("BatterySavingPage"),
+              title: const Text("Battery Saving Page"),
             ),
             body: Center(child: ListView(children: <Widget>[
+              Text("batterSaving: $_batterSaving"),
+
               ElevatedButton(
                   onPressed: () => _blePlugin.sendBatterySaving(true),
                   child: const Text("sendBatterySaving(true)")),

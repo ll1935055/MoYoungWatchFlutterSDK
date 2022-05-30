@@ -97,7 +97,7 @@ class _MyAppState extends State<MyApp> {
 
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                                  return NewRoute(
+                                  return DevicePage(
                                     device : _deviceList[index],
                                   );
                                 }));
@@ -146,7 +146,6 @@ class _MyAppState extends State<MyApp> {
         _scanBtnTxt = value ? "Scanning" : "Scan filed";
       })
     }).onError((error, stackTrace) => {
-      print(error.toString())
     });
   }
 
@@ -160,7 +159,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> selectContact() async {
     final Contact contact = await Navigator.push(context, MaterialPageRoute(
-      builder: (context) => FlutterContactsExample(context),
+      builder: (context) => FlutterContactsExample(pageContext: context),
       )
     );
 

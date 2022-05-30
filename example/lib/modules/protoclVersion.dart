@@ -2,34 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:moyoung_ble_plugin/moyoung_ble.dart';
 
 class ProtocolVersionPage extends StatefulWidget {
-  MoYoungBle blePlugin;
+  final MoYoungBle blePlugin;
 
-  ProtocolVersionPage({
+  const ProtocolVersionPage({
     Key? key,
     required this.blePlugin,
   }) : super(key: key);
 
   @override
   State<ProtocolVersionPage> createState() {
-    return _protocolVersionPage(blePlugin);
+    return _ProtocolVersionPage(blePlugin);
   }
 }
 
-class _protocolVersionPage extends State<ProtocolVersionPage> {
+class _ProtocolVersionPage extends State<ProtocolVersionPage> {
   final MoYoungBle _blePlugin;
+  String _protocolVersion = "";
 
-  _protocolVersionPage(this._blePlugin);
+  _ProtocolVersionPage(this._blePlugin);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("ProtocolVersionPage"),
+              title: const Text("Protocol Version Page"),
             ),
             body: Center(child: ListView(children: <Widget>[
+              Text("protocolVersion: $_protocolVersion"),
+
               ElevatedButton(
-                  onPressed: () => _blePlugin.getProtocolVersion,
+                  onPressed: () => setState(() async {
+                    _protocolVersion = await _blePlugin.getProtocolVersion;
+                  }),
                   child: const Text("getProtocolVersion()")),
             ])
             )

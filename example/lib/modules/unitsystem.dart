@@ -2,42 +2,47 @@ import 'package:flutter/material.dart';
 import 'package:moyoung_ble_plugin/moyoung_ble.dart';
 
 class UnitSystemPage extends StatefulWidget {
-  MoYoungBle blePlugin;
+  final MoYoungBle blePlugin;
 
-  UnitSystemPage({Key? key, required this.blePlugin}) : super(key: key);
+  const UnitSystemPage({Key? key, required this.blePlugin}) : super(key: key);
 
   @override
   State<UnitSystemPage> createState() {
-    return _unitSystemPage(blePlugin);
+    return _UnitSystemPage(blePlugin);
   }
 }
 
-class _unitSystemPage extends State<UnitSystemPage> {
+class _UnitSystemPage extends State<UnitSystemPage> {
   final MoYoungBle _blePlugin;
+  int _unitSystemType = -1;
 
-  _unitSystemPage(this._blePlugin);
+  _UnitSystemPage(this._blePlugin);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("UnitSystemPage"),
+              title: const Text("UnitSystem Page"),
             ),
             body: Center(
             child: ListView(
               children: [
+                Text("unitSystemType: $_unitSystemType"),
+
                 ElevatedButton(
                     child: const Text('queryMetricSystem()'),
-                    onPressed: () => _blePlugin.queryUnitSystem),
+                    onPressed: () => setState(() async {
+                      _unitSystemType = await _blePlugin.queryUnitSystem;
+                    })),
                 ElevatedButton(
                     child: const Text('sendMetricSystem(METRIC_SYSTEM)'),
                     onPressed: () => _blePlugin
-                        .sendUnitSystem(UnitSystemType.METRIC_SYSTEM)),
+                        .sendUnitSystem(UnitSystemType.metricSystem)),
                 ElevatedButton(
                     child: const Text('sendMetricSystem(IMPERIAL_SYSTEM)'),
                     onPressed: () => _blePlugin
-                        .sendUnitSystem(UnitSystemType.IMPERIAL_SYSTEM)),
+                        .sendUnitSystem(UnitSystemType.imperialSystem)),
               ],
             )
             )
