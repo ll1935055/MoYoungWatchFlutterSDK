@@ -26,7 +26,7 @@ class _DisplayTimePage extends State<DisplayTimePage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Display Time Page"),
+              title: const Text("Display Time"),
             ),
             body: Center(child: ListView(children: <Widget>[
               Text("time: $_time"),
@@ -35,9 +35,12 @@ class _DisplayTimePage extends State<DisplayTimePage> {
                   onPressed: () => _blePlugin.sendDisplayTime(DisplayTimeType.displayFive),
                   child: const Text("sendDisplayTime()")),
               ElevatedButton(
-                  onPressed: () => setState(() async {
-                    _time = await _blePlugin.queryDisplayTime;
-                  }),
+                  onPressed: () async {
+                    int time = await _blePlugin.queryDisplayTime;
+                    setState(() {
+                    _time = time;
+                    });
+                  },
                   child: const Text("queryDisplayTime()")),
             ])
             )

@@ -28,7 +28,7 @@ class _SedentaryReminderPage extends State<SedentaryReminderPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Sedentary Reminder Page"),
+              title: const Text("Sedentary Reminder"),
             ),
             body: Center(child: ListView(children: [
               Text("sedentaryReminder: $_sedentaryReminder"),
@@ -45,9 +45,11 @@ class _SedentaryReminderPage extends State<SedentaryReminderPage> {
                   onPressed: () => _blePlugin.sendSedentaryReminder(true)),
               ElevatedButton(
                   child: const Text('querySedentaryReminder()'),
-                  onPressed: () => setState(() async {
-                    _sedentaryReminder = await _blePlugin.querySedentaryReminder;
-                  })),
+                  onPressed: () async {
+                    bool sedentaryReminder = await _blePlugin.querySedentaryReminder;
+                    setState(() {
+                    _sedentaryReminder = sedentaryReminder;
+                  });}),
               ElevatedButton(
                   child: const Text('sendSedentaryReminderPeriod()'),
                   onPressed: () => _blePlugin.sendSedentaryReminderPeriod(
@@ -59,13 +61,14 @@ class _SedentaryReminderPage extends State<SedentaryReminderPage> {
                       ))),
               ElevatedButton(
                   child: const Text('querySedentaryReminderPeriod()'),
-                  onPressed: () => setState(() async {
+                  onPressed: () async {
                     _reminderPeriodBean = await _blePlugin.querySedentaryReminderPeriod;
+                    setState(() {
                     _endHour = _reminderPeriodBean!.endHour;
                     _period = _reminderPeriodBean!.period;
                     _startHour = _reminderPeriodBean!.startHour;
                     _steps = _reminderPeriodBean!.steps;
-                  })),
+                  });}),
             ])
             )
         )

@@ -26,7 +26,7 @@ class _BreathingLightPage extends State<BreathingLightPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Breathing Light Page"),
+              title: const Text("Breathing Light"),
             ),
             body: Center(child: ListView(children: <Widget>[
               Text("breathingLight: $_breathingLight"),
@@ -39,9 +39,12 @@ class _BreathingLightPage extends State<BreathingLightPage> {
                   onPressed: () => _blePlugin.sendBreathingLight(true)),
               ElevatedButton(
                   child: const Text('queryBreathingLight()'),
-                  onPressed: () => setState(() async {
-                     _breathingLight = await _blePlugin.queryBreathingLight;
-                  })),
+                  onPressed: () async {
+                    bool breathingLight = await _blePlugin.queryBreathingLight;
+                    setState(() {
+                      _breathingLight = breathingLight;
+                    });
+                  }),
             ])
             )
         )

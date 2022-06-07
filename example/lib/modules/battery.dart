@@ -21,7 +21,7 @@ class _BatteryPage extends State<BatteryPage> {
   final MoYoungBle _blePlugin;
   final _streamSubscriptions = <StreamSubscription<dynamic>>[];
   int _deviceBattery = -1;
-  bool _enable = false;
+  bool _subscribe = false;
 
   _BatteryPage(this._blePlugin);
 
@@ -34,10 +34,18 @@ class _BatteryPage extends State<BatteryPage> {
   void subscriptStream() {
     _streamSubscriptions.add(
       _blePlugin.deviceBatteryEveStm.listen(
-            (DeviceBatteryBean event) {
+        (DeviceBatteryBean event) {
           setState(() {
-              _deviceBattery = event.deviceBattery;
-              _enable = event.isSubscribe;
+            switch (event.type) {
+              case DeviceBatteryType.deviceBattery:
+                _deviceBattery = event.deviceBattery!;
+                break;
+              case DeviceBatteryType.subscribe:
+                _subscribe = event.subscribe!;
+                break;
+              default:
+                break;
+            }
           });
         },
       ),
@@ -49,13 +57,13 @@ class _BatteryPage extends State<BatteryPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Battery Page"),
+              title: const Text("Battery"),
             ),
             body: Center(
                 child: ListView(
                     children: <Widget>[
                       Text("deviceBattery: $_deviceBattery"),
-                      Text("enable: $_enable"),
+                      Text("enable: $_subscribe"),
 
                       ElevatedButton(
                           child: const Text('queryDeviceBattery()'),

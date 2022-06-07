@@ -23,7 +23,11 @@ class _SleepPage extends State<SleepPage> {
   int _lightTime = -1;
   int _soberTime = -1;
   int _remTime = -1;
+  int _timeType = -1;
 
+
+  SleepInfo? sleepInfo;
+  HistorySleepBean? historySleep;
   Logger logger = Logger();
 
   _SleepPage(this._blePlugin);
@@ -37,13 +41,27 @@ class _SleepPage extends State<SleepPage> {
   void subscriptStream() {
     _streamSubscriptions.add(
       _blePlugin.sleepChangeEveStm.listen(
-            (SleepBean event) {
+        (SleepBean event) {
           setState(() {
-            _totalTime = event.pastSleepInfo.totalTime;
-            _restfulTime = event.pastSleepInfo.restfulTime;
-            _lightTime = event.pastSleepInfo.lightTime;
-            _soberTime = event.pastSleepInfo.soberTime;
-            _remTime = event.pastSleepInfo.remTime;
+            switch (event.type) {
+              case SleepType.sleepChange:
+                _totalTime = event.sleepInfo!.totalTime!;
+                _restfulTime = event.sleepInfo!.restfulTime!;
+                _lightTime = event.sleepInfo!.lightTime!;
+                _soberTime = event.sleepInfo!.soberTime!;
+                _remTime = event.sleepInfo!.remTime!;
+                break;
+              case SleepType.historySleepChange:
+                _timeType = event.historySleep!.timeType!;
+                _totalTime = event.historySleep!.sleepInfo!.totalTime!;
+                _restfulTime = event.historySleep!.sleepInfo!.restfulTime!;
+                _lightTime = event.historySleep!.sleepInfo!.lightTime!;
+                _soberTime = event.historySleep!.sleepInfo!.soberTime!;
+                _remTime = event.historySleep!.sleepInfo!.remTime!;
+                break;
+              default:
+                break;
+            }
           });
         },
       ),
@@ -55,11 +73,12 @@ class _SleepPage extends State<SleepPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Sleep Page"),
+              title: const Text("Sleep"),
             ),
             body: Center(
               child: ListView(
                 children: [
+                  Text("timeType: $_timeType"),
                   Text("totalTime: $_totalTime"),
                   Text("restfulTime: $_restfulTime"),
                   Text("lightTime: $_lightTime"),

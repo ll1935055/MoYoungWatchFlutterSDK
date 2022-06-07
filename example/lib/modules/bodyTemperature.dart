@@ -27,6 +27,7 @@ class _BodyTemperaturePage extends State<BodyTemperaturePage> {
   String _tempTimeType = "";
   int _startTime = -1;
   List<double> _tempList = [];
+  String _timingMeasureTempState = '';
 
   _BodyTemperaturePage(this._blePlugin);
 
@@ -36,19 +37,30 @@ class _BodyTemperaturePage extends State<BodyTemperaturePage> {
     subscriptStream();
   }
 
-
   void subscriptStream() {
     _streamSubscriptions.add(
       _blePlugin.tempChangeEveStm.listen(
-            (TempChangeBean event) {
+        (TempChangeBean event) {
           setState(() {
-            _enable = event.enable;
-            _temp = event.temp;
-            _state = event.state;
-            _tempInfo = event.tempInfo;
-            _tempTimeType = _tempInfo!.tempTimeType;
-            _startTime = _tempInfo!.startTime;
-            _tempList = _tempInfo!.tempList;
+            switch (event.type) {
+              case TempChangeType.continueState:
+                _enable = event.enable!;
+                break;
+              case TempChangeType.measureTemp:
+                _temp = event.temp!;
+                break;
+              case TempChangeType.measureState:
+                _state = event.state!;
+                break;
+              case TempChangeType.continueTemp:
+                _tempInfo = event.tempInfo;
+                _tempTimeType = _tempInfo!.tempTimeType!;
+                _startTime = _tempInfo!.startTime!;
+                _tempList = _tempInfo!.tempList!;
+                break;
+              default:
+                break;
+            }
           });
         },
       ),
@@ -60,7 +72,7 @@ class _BodyTemperaturePage extends State<BodyTemperaturePage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Body Temperature Page"),
+              title: const Text("Body Temperature"),
             ),
             body: Center(child: ListView(children: <Widget>[
               Text("enable: $_enable"),
@@ -69,6 +81,7 @@ class _BodyTemperaturePage extends State<BodyTemperaturePage> {
               Text("tempTimeType: $_tempTimeType"),
               Text("startTime: $_startTime"),
               Text("tempList: $_tempList"),
+              Text("timingMeasureTempState: $_timingMeasureTempState"),
 
               ElevatedButton(
                   onPressed: () => _blePlugin.startMeasureTemp,
@@ -83,7 +96,12 @@ class _BodyTemperaturePage extends State<BodyTemperaturePage> {
                   onPressed: () => _blePlugin.disableTimingMeasureTemp,
                   child: const Text("disableTimingMeasureTemp()")),
               ElevatedButton(
-                  onPressed: () => _blePlugin.queryTimingMeasureTempState,
+                  onPressed: () async {
+                    String timingMeasureTempState = await _blePlugin.queryTimingMeasureTempState;
+                    setState(() {
+                      _timingMeasureTempState = timingMeasureTempState;
+                    });
+                  },
                   child: const Text("queryTimingMeasureTempState()")),
               ElevatedButton(
                   onPressed: () =>

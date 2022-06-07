@@ -23,7 +23,7 @@ class _GoalStepPage extends State<GoalStepsPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Goal Steps Page"),
+              title: const Text("Goal Steps"),
             ),
             body: Center(
                 child: ListView(
@@ -35,9 +35,11 @@ class _GoalStepPage extends State<GoalStepsPage> {
                           onPressed: () => _blePlugin.sendGoalSteps(5000)),
                       ElevatedButton(
                           child: const Text('queryGoalStep()'),
-                          onPressed: () => setState(() async {
-                            _goalSteps = await _blePlugin.queryGoalSteps;
-                          })),
+                          onPressed: () async {
+                            int goalSteps = await _blePlugin.queryGoalSteps;
+                            setState(() {
+                            _goalSteps = goalSteps;
+                          });}),
                     ]
                 )
             )

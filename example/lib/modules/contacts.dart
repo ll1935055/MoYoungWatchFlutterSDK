@@ -31,6 +31,11 @@ class _ContactsPage extends State<ContactsPage> {
   int _error = -1;
   int _savedSuccess = -1;
   int _savedFail = -1;
+  int _contactCount = -1;
+  bool _supported = false;
+  int _count = -1;
+  int _width = -1;
+  int _height = -1;
 
   _ContactsPage(this._blePlugin);
 
@@ -45,9 +50,21 @@ class _ContactsPage extends State<ContactsPage> {
       _blePlugin.contactAvatarEveStm.listen(
             (FileTransBean event) {
           setState(() {
-            logger.d('contactAvatarEveStm===' + event.progress.toString());
-            _progress = event.progress;
-            _error = event.error;
+            switch(event.type) {
+              case TransType.transStart:
+                break;
+              case TransType.transChanged:
+                _progress = event.progress!;
+                break;
+              case TransType.transCompleted:
+                _progress = event.progress!;
+                break;
+              case TransType.error:
+                _error = event.error!;
+                break;
+              default:
+                break;
+            }
           });
         },
       ),
@@ -55,11 +72,19 @@ class _ContactsPage extends State<ContactsPage> {
 
     _streamSubscriptions.add(
       _blePlugin.contactEveStm.listen(
-            (ContactListenBean event) {
+        (ContactListenBean event) {
           setState(() {
             logger.d("ContactEveStm======" + event.toString());
-            _savedSuccess = event.savedSuccess;
-            _savedFail = event.savedFail;
+            switch (event.type) {
+              case ContactListenType.savedSuccess:
+                _savedSuccess = event.savedSuccess!;
+                break;
+              case ContactListenType.savedFail:
+                _savedFail = event.savedFail!;
+                break;
+              default:
+                break;
+            }
           });
         },
       ),
@@ -71,7 +96,7 @@ class _ContactsPage extends State<ContactsPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Contacts Page"),
+              title: const Text("Contacts"),
             ),
             body: Center(
                 child: ListView(children: <Widget>[
@@ -79,12 +104,30 @@ class _ContactsPage extends State<ContactsPage> {
                   Text("error: $_error"),
                   Text("savedSuccess: $_savedSuccess"),
                   Text("savedFail: $_savedFail"),
+                  Text("supported: $_supported"),
+                  Text("count: $_count"),
+                  Text("width: $_width"),
+                  Text("height: $_height"),
+                  Text("contactCount: $_contactCount"),
                   ElevatedButton(
-                      onPressed: () async => _contactConfigBean =
-                      await _blePlugin.checkSupportQuickContact,
+                      onPressed: () async {
+                        _contactConfigBean =
+                        await _blePlugin.checkSupportQuickContact;
+                        setState(() {
+                          _supported = _contactConfigBean!.supported;
+                          _count = _contactConfigBean!.count;
+                          _width = _contactConfigBean!.width;
+                          _height = _contactConfigBean!.height;
+                        });
+                      },
                       child: const Text("checkSupportQuickContact()")),
                   ElevatedButton(
-                      onPressed: () => _blePlugin.queryContactCount,
+                      onPressed: () async {
+                        int contactCount = await _blePlugin.queryContactCount;
+                        setState(() {
+                          _contactCount = contactCount;
+                        });
+                      },
                       child: const Text("queryContactCount()")),
                   ElevatedButton(
                       onPressed: () {
@@ -99,7 +142,7 @@ class _ContactsPage extends State<ContactsPage> {
                           sendContactAvatar();
                         }
                       },
-                      child: Text("sendContactAvatar")),
+                      child: const Text("sendContactAvatar")),
                   ElevatedButton(
                       onPressed: () => _blePlugin.deleteContact(0),
                       child: const Text("deleteContact(0)")),
@@ -118,10 +161,9 @@ class _ContactsPage extends State<ContactsPage> {
         MaterialPageRoute(
           builder: (context) => FlutterContactsExample(pageContext: context),
         ));
-
-    if (int.parse(contact.id) < _contactConfigBean!.count) {
+    // if (int.parse(contact.id) < _contactConfigBean!.count) {
       _blePlugin.sendContact(ContactBean(
-        id: 0,
+        id: 1,
         width: _contactConfigBean!.width,
         height: _contactConfigBean!.height,
         address: 1,
@@ -130,18 +172,19 @@ class _ContactsPage extends State<ContactsPage> {
         avatar: contact.thumbnail,
         timeout: 30,
       ));
-    }
 
-    if (!mounted) {
-      return;
-    }
+      if (!mounted) {
+        return;
+      }
 
-    setState(() {
-      String name = contact.name.first;
-      String number = contact.phones.first.number;
-      _contactStr = '$name, $number';
-    });
+      setState(() {
+        String name = contact.name.first;
+        String number = contact.phones.first.number;
+        _contactStr = '$name, $number';
+      });
+    // }
   }
+
 
   Future<void> sendContactAvatar() async {
     final Contact contact = await Navigator.push(
@@ -150,27 +193,17 @@ class _ContactsPage extends State<ContactsPage> {
           builder: (context) => FlutterContactsExample(pageContext: context),
         ));
 
-    if (int.parse(contact.id) < _contactConfigBean!.count) {
+    // if (int.parse(contact.id) < _contactConfigBean!.count) {
       _blePlugin.sendContactAvatar(ContactBean(
-        id: 0,
+        id: 2,
         width: _contactConfigBean!.width,
         height: _contactConfigBean!.height,
-        address: 1,
+        address: 2,
         name: contact.name.first,
         number: contact.phones.first.number,
         avatar: contact.thumbnail,
         timeout: 30,
       ));
-    }
-
-    if (!mounted) {
-      return;
-    }
-
-    setState(() {
-      String name = contact.name.first;
-      String number = contact.phones.first.number;
-      _contactStr = '$name, $number';
-    });
+    // }
   }
 }

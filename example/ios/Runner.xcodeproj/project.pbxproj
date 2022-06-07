@@ -13,7 +13,7 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
-		97E29CFE165D646D986FAC85 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2D0C9D6FF758364A50DC9E1 /* Pods_Runner.framework */; };
+		97E29CFE165D646D986FAC85 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2D0C9D6FF758364A50DC9E1 /* Pods_Runner.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -208,7 +208,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin";
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin\n";
 		};
 		92015D92DD4172AFFAFB2E54 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -367,6 +367,26 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-framework",
+					"\"CRPSmartBand\"",
+					"-framework",
+					"\"OTAFramework\"",
+					"-framework",
+					"\"RTKLEFoundation\"",
+					"-framework",
+					"\"RTKOTASDK\"",
+					"-framework",
+					"\"flutter_contacts\"",
+					"-framework",
+					"\"moyoung_ble_plugin\"",
+					"-framework",
+					"\"path_provider_ios\"",
+					"-framework",
+					"\"permission_handler\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.moyoung.moyoungBlePluginExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -502,6 +522,26 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-framework",
+					"\"CRPSmartBand\"",
+					"-framework",
+					"\"OTAFramework\"",
+					"-framework",
+					"\"RTKLEFoundation\"",
+					"-framework",
+					"\"RTKOTASDK\"",
+					"-framework",
+					"\"flutter_contacts\"",
+					"-framework",
+					"\"moyoung_ble_plugin\"",
+					"-framework",
+					"\"path_provider_ios\"",
+					"-framework",
+					"\"permission_handler\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.moyoung.moyoungBlePluginExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -530,6 +570,26 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-framework",
+					"\"CRPSmartBand\"",
+					"-framework",
+					"\"OTAFramework\"",
+					"-framework",
+					"\"RTKLEFoundation\"",
+					"-framework",
+					"\"RTKOTASDK\"",
+					"-framework",
+					"\"flutter_contacts\"",
+					"-framework",
+					"\"moyoung_ble_plugin\"",
+					"-framework",
+					"\"path_provider_ios\"",
+					"-framework",
+					"\"permission_handler\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.moyoung.moyoungBlePluginExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -32,7 +32,7 @@ class _DrinkWaterReminderPage extends State<DrinkWaterReminderPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Drink Water Reminder Page"),
+              title: const Text("Drink Water Reminder"),
             ),
             body: Center(child: ListView(children: <Widget>[
               Text("enable: $_enable"),
@@ -56,15 +56,16 @@ class _DrinkWaterReminderPage extends State<DrinkWaterReminderPage> {
                   onPressed: () => _blePlugin.disableDrinkWaterReminder,
                   child: const Text("disableDrinkWaterReminder()")),
               ElevatedButton(
-                  onPressed: () => setState(() async {
+                  onPressed: () async {
                     _drinkWaterPeriodBean = await _blePlugin.queryDrinkWaterReminderPeriod;
+                    setState(() {
                     _enable = _drinkWaterPeriodBean!.enable;
                     _startHour = _drinkWaterPeriodBean!.startHour;
                     _startMinute = _drinkWaterPeriodBean!.startMinute;
                     _count = _drinkWaterPeriodBean!.count;
                     _period = _drinkWaterPeriodBean!.period;
                     _currentCups = _drinkWaterPeriodBean!.currentCups;
-                  }),
+                  });},
                   child: const Text("queryDrinkWaterReminderPeriod()")),
             ])
             )

@@ -22,7 +22,7 @@ class _FindWatchPage extends State<FindWatchPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Find Watch Page"),
+              title: const Text("Find Watch"),
             ),
             body: Center(child: ListView(children: [
               ElevatedButton(

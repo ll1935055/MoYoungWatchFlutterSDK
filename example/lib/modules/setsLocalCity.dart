@@ -25,7 +25,7 @@ class _SetsLocalCityPage extends State<SetsLocalCityPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Sets Local City Page"),
+              title: const Text("Sets Local City"),
             ),
             body: Center(child: ListView(children: <Widget>[
               ElevatedButton(

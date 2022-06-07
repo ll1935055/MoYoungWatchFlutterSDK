@@ -29,6 +29,7 @@ class _TemperatureSystemPage extends State<TemperatureSystemPage> {
   String _tempTimeType = "";
   int _startTime = -1;
   List<double> _tempList = [];
+  int _tempUnit = -1;
 
   _TemperatureSystemPage(this._blePlugin);
 
@@ -44,13 +45,43 @@ class _TemperatureSystemPage extends State<TemperatureSystemPage> {
             (TempChangeBean event) {
           setState(() {
             logger.d("connTempChangeEveStm======" + event.toString());
-            _enable = event.enable;
-            _temp = event.temp;
-            _state = event.state;
-            _tempInfo = event.tempInfo;
-            _tempTimeType = _tempInfo!.tempTimeType;
-            _startTime = _tempInfo!.startTime;
-            _tempList = _tempInfo!.tempList;
+            switch (event.type) {
+              case TempChangeType.continueState:
+                _enable = event.enable!;
+                break;
+              case TempChangeType.measureTemp:
+                _temp = event.temp!;
+                break;
+              case TempChangeType.measureState:
+                _state = event.state!;
+                break;
+              case TempChangeType.continueTemp:
+                _tempInfo = event.tempInfo;
+                _tempTimeType = _tempInfo!.tempTimeType!;
+                _startTime = _tempInfo!.startTime!;
+                _tempList = _tempInfo!.tempList!;
+                break;
+              default:
+                break;
+            }
+          });
+        },
+      ),
+    );
+
+    _streamSubscriptions.add(
+      _blePlugin.weatherChangeEveStm.listen(
+            (WeatherChangeBean event) {
+          setState(() {
+            switch (event.type) {
+              case WeatherChangeType.updateWeather:
+                break;
+              case WeatherChangeType.tempUnitChange:
+                _tempUnit = event.tempUnit!;
+                break;
+              default:
+                break;
+            }
           });
         },
       ),
@@ -62,7 +93,7 @@ class _TemperatureSystemPage extends State<TemperatureSystemPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Temperature System Page"),
+              title: const Text("Temperature System"),
             ),
             body: Center(child: ListView(children: <Widget>[
               Text("enable: $_enable"),
@@ -71,6 +102,7 @@ class _TemperatureSystemPage extends State<TemperatureSystemPage> {
               Text("tempTimeType: $_tempTimeType"),
               Text("startTime: $_startTime"),
               Text("tempList: $_tempList"),
+              Text("weather: $_tempUnit"),
 
               ElevatedButton(
                   onPressed: () => _blePlugin.sendTempUnit(TempUnit.celsius),

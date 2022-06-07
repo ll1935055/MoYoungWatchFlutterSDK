@@ -18,15 +18,15 @@ class MenstrualCyclePage extends StatefulWidget {
 class _MenstrualCyclePage extends State<MenstrualCyclePage> {
   final MoYoungBle _blePlugin;
   MenstrualCycleBean? _menstrualCycleBean;
-  int physiologcalPeriod = -1;
-  int menstrualPeriod = -1;
-  String startDate = "";
-  bool menstrualReminder = false;
-  bool ovulationReminder = false;
-  bool ovulationDayReminder = false;
-  bool ovulationEndReminder = false;
-  int reminderHour = -1;
-  int reminderMinute = -1;
+  int _physiologcalPeriod = -1;
+  int _menstrualPeriod = -1;
+  String _startDate = "";
+  bool _menstrualReminder = false;
+  bool _ovulationReminder = false;
+  bool _ovulationDayReminder = false;
+  bool _ovulationEndReminder = false;
+  int _reminderHour = -1;
+  int _reminderMinute = -1;
 
   _MenstrualCyclePage(this._blePlugin);
 
@@ -35,20 +35,20 @@ class _MenstrualCyclePage extends State<MenstrualCyclePage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Menstrual Cycle Page"),
+              title: const Text("Menstrual Cycle"),
             ),
             body: Center(
                 child: ListView(
                     children: <Widget>[
-                      Text("physiologcalPeriod: $physiologcalPeriod"),
-                      Text("menstrualPeriod: $menstrualPeriod"),
-                      Text("startDate: $startDate"),
-                      Text("menstrualReminder: $menstrualReminder"),
-                      Text("ovulationReminder: $ovulationReminder"),
-                      Text("ovulationDayReminder: $ovulationDayReminder"),
-                      Text("ovulationEndReminder: $ovulationEndReminder"),
-                      Text("reminderHour: $reminderHour"),
-                      Text("reminderMinute: $reminderMinute"),
+                      Text("physiologcalPeriod: $_physiologcalPeriod"),
+                      Text("menstrualPeriod: $_menstrualPeriod"),
+                      Text("startDate: $_startDate"),
+                      Text("menstrualReminder: $_menstrualReminder"),
+                      Text("ovulationReminder: $_ovulationReminder"),
+                      Text("ovulationDayReminder: $_ovulationDayReminder"),
+                      Text("ovulationEndReminder: $_ovulationEndReminder"),
+                      Text("reminderHour: $_reminderHour"),
+                      Text("reminderMinute: $_reminderMinute"),
 
                       ElevatedButton(
                           onPressed: () =>
@@ -65,17 +65,19 @@ class _MenstrualCyclePage extends State<MenstrualCyclePage> {
                               )),
                           child: const Text("sendMenstrualCycle()")),
                       ElevatedButton(
-                          onPressed: () => setState(() async {
+                          onPressed: () async {
                             _menstrualCycleBean = await _blePlugin.queryMenstrualCycle;
-                            menstrualPeriod = _menstrualCycleBean!.menstrualPeriod;
-                            startDate = _menstrualCycleBean!.startDate;
-                            menstrualReminder = _menstrualCycleBean!.menstrualReminder;
-                            ovulationReminder = _menstrualCycleBean!.ovulationReminder;
-                            ovulationDayReminder = _menstrualCycleBean!.ovulationDayReminder;
-                            ovulationEndReminder = _menstrualCycleBean!.ovulationEndReminder;
-                            reminderHour = _menstrualCycleBean!.reminderHour;
-                            reminderMinute = _menstrualCycleBean!.reminderMinute;
-                          }),
+                            setState(() {
+                              _physiologcalPeriod = _menstrualCycleBean!.physiologcalPeriod;
+                            _menstrualPeriod = _menstrualCycleBean!.menstrualPeriod;
+                            _startDate = _menstrualCycleBean!.startDate;
+                            _menstrualReminder = _menstrualCycleBean!.menstrualReminder;
+                            _ovulationReminder = _menstrualCycleBean!.ovulationReminder;
+                            _ovulationDayReminder = _menstrualCycleBean!.ovulationDayReminder;
+                            _ovulationEndReminder = _menstrualCycleBean!.ovulationEndReminder;
+                            _reminderHour = _menstrualCycleBean!.reminderHour;
+                            _reminderMinute = _menstrualCycleBean!.reminderMinute;
+                          });},
                           child: const Text("queryMenstrualCycle()")),
                     ])
             )

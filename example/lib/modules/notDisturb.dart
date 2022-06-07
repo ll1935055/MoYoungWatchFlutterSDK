@@ -19,7 +19,7 @@ class _NotDisturbPage extends State<NotDisturbPage> {
   final MoYoungBle _blePlugin;
   PeriodTimeResultBean? _periodTimeResultBean;
   int _periodTimeType = -1;
-  PeriodTimeInfo? _periodTimeInfo;
+  PeriodTimeBean? _periodTimeInfo;
   int _endHour = -1;
   int _endMinute = -1;
   int _startHour = -1;
@@ -32,7 +32,7 @@ class _NotDisturbPage extends State<NotDisturbPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Not Disturb Page"),
+              title: const Text("Not Disturb"),
             ),
             body: Center(child: ListView(children: <Widget>[
               Text("periodTimeType: $_periodTimeType"),
@@ -43,15 +43,16 @@ class _NotDisturbPage extends State<NotDisturbPage> {
 
               ElevatedButton(
                   child: const Text('queryDoNotDisturbTime()'),
-                  onPressed: () => setState(() async {
+                  onPressed: () async {
                     _periodTimeResultBean = await _blePlugin.queryDoNotDisturbTime;
+                    setState(() {
                     _periodTimeType = _periodTimeResultBean!.periodTimeType;
                     _periodTimeInfo = _periodTimeResultBean!.periodTimeInfo;
                     _endHour = _periodTimeInfo!.endHour;
                     _endMinute = _periodTimeInfo!.endMinute;
                     _startHour = _periodTimeInfo!.startHour;
                     _startMinute = _periodTimeInfo!.startMinute;
-                  })),
+                  });}),
               ElevatedButton(
                   child: const Text('sendDoNotDisturbTime()'),
                   onPressed: () => _blePlugin.sendDoNotDisturbTime(

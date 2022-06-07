@@ -26,15 +26,18 @@ class _ClassicBluetoothAddressPage extends State<ClassicBluetoothAddressPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Classic Bluetooth Address Page"),
+              title: const Text("Classic Bluetooth Address"),
             ),
             body: Center(child: ListView(children: <Widget>[
               Text("address: $_address"),
 
               ElevatedButton(
-                  onPressed: () => setState(() async {
-                    _address = await _blePlugin.queryBtAddress;
-                  }),
+                  onPressed: () async{
+                    String address = await _blePlugin.queryBtAddress;
+                    setState(() {
+                      _address = address;
+                    });
+                  },
                   child: const Text("queryBtAddress()")),
             ])
             )

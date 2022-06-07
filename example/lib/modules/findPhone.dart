@@ -25,7 +25,7 @@ class _FindPhonePage extends State<FindPhonePage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Find Phone Page"),
+              title: const Text("Find Phone"),
             ),
             body: Center(child: ListView(children: <Widget>[
               ElevatedButton(

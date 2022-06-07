@@ -23,12 +23,9 @@ class _ECGPage extends State<ECGPage> {
   final _streamSubscriptions = <StreamSubscription<dynamic>>[];
   Logger logger = Logger();
   List<int> _ints = [];
-  int _measureComplete = -1;
   String _date = "";
-  bool _isCancel = false;
-  bool _isFail = false;
-
   _ECGPage(this._blePlugin);
+  bool _isNewECGMeasurementVersion = true;
 
   @override
   void initState() {
@@ -41,12 +38,20 @@ class _ECGPage extends State<ECGPage> {
       _blePlugin.ecgEveStm.listen(
             (EgcBean event) {
           setState(() {
-            logger.d('ecgEveStm===' + event.ints.toString());
-            _ints = event.ints;
-            _measureComplete = event.measureComplete;
-            _date = event.date;
-            _isCancel = event.isCancel;
-            _isFail = event.isFail;
+            switch(event.type){
+              case ECGType.ecgChangeInts:
+                _ints = event.ints!;
+                break;
+              case ECGType.measureComplete:
+                break;
+              case ECGType.date:
+                _date = event.date!;
+                break;
+              case ECGType.cancel:
+                break;
+              case ECGType.fail:
+                break;
+            }
           });
         },
       ),
@@ -58,14 +63,12 @@ class _ECGPage extends State<ECGPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("ECG Page"),
+              title: const Text("ECG"),
             ),
             body: Center(child: ListView(children: <Widget>[
               Text("ints: $_ints"),
-              Text("ints: $_measureComplete"),
-              Text("ints: $_date"),
-              Text("ints: $_isCancel"),
-              Text("ints: $_isFail"),
+              Text("date: $_date"),
+              Text("isNewECGMeasurementVersion: $_isNewECGMeasurementVersion"),
 
               ElevatedButton(
                   child: const Text('setECGChangeListener()'),
@@ -78,7 +81,12 @@ class _ECGPage extends State<ECGPage> {
                   onPressed: () => _blePlugin.stopECGMeasure),
               ElevatedButton(
                   child: const Text('isNewECGMeasurementVersion'),
-                  onPressed: () => _blePlugin.isNewECGMeasurementVersion),
+                  onPressed: () async {
+                    bool isNewECGMeasurementVersion = await _blePlugin.isNewECGMeasurementVersion;
+                    setState(() {
+                      _isNewECGMeasurementVersion = isNewECGMeasurementVersion;
+                    });
+                  }),
               ElevatedButton(
                   child: const Text('queryLastMeasureECGData'),
                   onPressed: () => _blePlugin.queryLastMeasureECGData),

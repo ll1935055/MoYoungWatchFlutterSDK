@@ -23,7 +23,7 @@ class _UnitSystemPage extends State<UnitSystemPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("UnitSystem Page"),
+              title: const Text("UnitSystem"),
             ),
             body: Center(
             child: ListView(
@@ -32,9 +32,11 @@ class _UnitSystemPage extends State<UnitSystemPage> {
 
                 ElevatedButton(
                     child: const Text('queryMetricSystem()'),
-                    onPressed: () => setState(() async {
-                      _unitSystemType = await _blePlugin.queryUnitSystem;
-                    })),
+                    onPressed: () async {
+                      int unitSystemType = await _blePlugin.queryUnitSystem;
+                      setState(() {
+                      _unitSystemType = unitSystemType;
+                    });}),
                 ElevatedButton(
                     child: const Text('sendMetricSystem(METRIC_SYSTEM)'),
                     onPressed: () => _blePlugin

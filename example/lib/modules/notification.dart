@@ -14,7 +14,7 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPage extends State<NotificationPage> {
   final MoYoungBle _blePlugin;
-  bool _messageState = false;
+  List _list = [];
 
   _NotificationPage(this._blePlugin);
 
@@ -23,22 +23,11 @@ class _NotificationPage extends State<NotificationPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Notification Page"),
+              title: const Text("Notification"),
             ),
             body: Center(child: ListView(children: [
-              Text("messageState: $_messageState"),
+              Text("list: $_list"),
 
-              ElevatedButton(
-                  child: const Text('sendOtherMessageState(false)'),
-                  onPressed: () => _blePlugin.sendOtherMessageState(false)),
-              ElevatedButton(
-                  child: const Text('sendOtherMessageState(true)'),
-                  onPressed: () => _blePlugin.sendOtherMessageState(true)),
-              ElevatedButton(
-                  child: const Text('queryOtherMessageState()'),
-                  onPressed: () => setState(() async {
-                    _messageState = await _blePlugin.queryOtherMessageState;
-                  })),
               ElevatedButton(
                   child: const Text(
                       'sendMessage(MessageInfo()'),
@@ -47,14 +36,28 @@ class _NotificationPage extends State<NotificationPage> {
                           message: 'message',
                           type: BleMessageType.messagePhone,
                           versionCode: 229,
-                          isHs: false,
-                          isSmallScreen: false
+                          isHs: true,
+                          isSmallScreen: true
                       ))),
               ElevatedButton(
-                  child: const Text('endCall()'),
+                  child: const Text('android:endCall()'),
                   onPressed: () => _blePlugin.endCall),
-            ])
-            )
+              ElevatedButton(
+                  child: const Text('ios:setNotification()'),
+                  onPressed: () => _blePlugin.setNotification([
+                        NotificationType.facebook,
+                        NotificationType.gmail,
+                        NotificationType.kakaoTalk
+                      ])),
+              ElevatedButton(
+                  child: const Text('ios:getNotification'),
+                  onPressed: () async {
+                    List list = await _blePlugin.getNotification;
+                    setState(() {
+                      _list = list;
+                    });
+                  }),
+            ]))
         )
     );
   }

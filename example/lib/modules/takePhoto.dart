@@ -63,7 +63,7 @@ class _TakePhotoPage extends State<TakePhotoPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Take Photo Page"),
+              title: const Text("Take Photo"),
             ),
             body: Center(child: ListView(children: <Widget>[
               Text("camera: $_camera"),

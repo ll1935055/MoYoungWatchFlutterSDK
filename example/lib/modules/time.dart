@@ -26,7 +26,7 @@ class _TimePage extends State<TimePage> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text("Time Page"),
+          title: const Text("Time"),
         ),
         body: Center(
             child: ListView(
@@ -46,9 +46,12 @@ class _TimePage extends State<TimePage> {
                           .sendTimeSystem(TimeSystemType.timeSystem24)),
                   ElevatedButton(
                       child: const Text('queryTimeSystem()'),
-                      onPressed: () => setState(() async {
-                        _time = await _blePlugin.queryTimeSystem;
-                      })),
+                      onPressed: () async {
+                        int time = await _blePlugin.queryTimeSystem;
+                        setState(() {
+                          _time = time;
+                        });
+                      }),
                 ]
             )
         ),

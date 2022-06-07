@@ -35,7 +35,7 @@ class _BatterySavingPage extends State<BatterySavingPage> {
   void subscriptStream() {
     _streamSubscriptions.add(
       _blePlugin.batterySavingEveStm.listen(
-            (event) {
+            (bool event) {
           setState(() {
             logger.d("BatterySavingEveStm======" + event.toString());
             _batterSaving = event;
@@ -50,7 +50,7 @@ class _BatterySavingPage extends State<BatterySavingPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Battery Saving Page"),
+              title: const Text("Battery Saving"),
             ),
             body: Center(child: ListView(children: <Widget>[
               Text("batterSaving: $_batterSaving"),

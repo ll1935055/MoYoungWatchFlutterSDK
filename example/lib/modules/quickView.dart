@@ -17,7 +17,7 @@ class _QuickViewPage extends State<QuickViewPage> {
   bool _quickViewState = false;
   PeriodTimeResultBean? _periodTimeResultBean;
   int _periodTimeType = -1;
-  PeriodTimeInfo? _periodTimeInfo;
+  PeriodTimeBean? _periodTimeInfo;
   int _endHour = -1;
   int _endMinute = -1;
   int _startHour = -1;
@@ -30,7 +30,7 @@ class _QuickViewPage extends State<QuickViewPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Quick View Page"),
+              title: const Text("Quick View"),
             ),
             body: Center(
               child: ListView(
@@ -50,7 +50,12 @@ class _QuickViewPage extends State<QuickViewPage> {
                       onPressed: () => _blePlugin.sendQuickView(false)),
                   ElevatedButton(
                       child: const Text('queryQuickView()'),
-                      onPressed: () => _blePlugin.queryQuickView),
+                      onPressed: () async {
+                        bool quickViewState = await _blePlugin.queryQuickView;
+                        setState(() {
+                          _quickViewState = quickViewState;
+                        });
+                      }),
                   ElevatedButton(
                       child: const Text(
                           'sendQuickViewTime(CrpPeriodTimeInfo(0,0,0,0)'),
@@ -62,15 +67,16 @@ class _QuickViewPage extends State<QuickViewPage> {
                               startMinute: 0))),
                   ElevatedButton(
                       child: const Text('queryQuickViewTime()'),
-                      onPressed: () => setState(() async {
+                      onPressed: () async {
                         _periodTimeResultBean = await _blePlugin.queryQuickViewTime;
+                        setState(() {
                         _periodTimeType = _periodTimeResultBean!.periodTimeType;
                         _periodTimeInfo = _periodTimeResultBean!.periodTimeInfo;
                         _endHour = _periodTimeInfo!.endHour;
                         _endMinute = _periodTimeInfo!.endMinute;
                         _startHour = _periodTimeInfo!.startHour;
                         _startMinute = _periodTimeInfo!.startMinute;
-                      })),
+                      });}),
                 ],
               ),
             )

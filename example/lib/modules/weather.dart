@@ -20,51 +20,28 @@ class WeatherPage extends StatefulWidget {
 class _WeatherPage extends State<WeatherPage> {
   final MoYoungBle _blePlugin;
 
-  final _streamSubscriptions = <StreamSubscription<dynamic>>[];
-  int _weather = -1;
-
   _WeatherPage(this._blePlugin);
-
-  @override
-  void initState() {
-    super.initState();
-    subscriptStream();
-  }
-
-  void subscriptStream() {
-    _streamSubscriptions.add(
-      _blePlugin.weatherChangeEveStm.listen(
-            (int event) {
-          setState(() {
-            _weather = event;
-          });
-        },
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Weather Page"),
+              title: const Text("Weather"),
             ),
             body: Center(
               child: ListView(
                 children: [
-                  Text("weather：$_weather"),
-
                   ElevatedButton(
                       child: const Text('sendTodayWeather()'),
                       onPressed: () => _blePlugin.sendTodayWeather(
                           TodayWeatherBean(
-                              city: "111",
-                              lunar: "111",
-                              festival: "111",
+                              city: "长沙",
+                              lunar: "晴",
+                              festival: "儿童节",
                               pm25: 111,
-                              temp: 111,
-                              weatherId: 111))),
+                              temp: 20,
+                              weatherId: 5))),
                   ElevatedButton(
                       child: const Text('sendFutureWeather()'),
                       onPressed: () => _blePlugin.sendFutureWeather(
@@ -85,7 +62,7 @@ class _WeatherPage extends State<WeatherPage> {
     FutureWeatherBean futureWeatherBean2 = FutureWeatherBean(
         weatherId: 6,
         lowTemperature: 11,
-        highTemperature: 21);
+        highTemperature: 40);
 
     List<FutureWeatherBean> futureList = [];
     futureList.add(futureWeatherBean1);

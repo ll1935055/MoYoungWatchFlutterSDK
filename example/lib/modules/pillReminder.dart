@@ -32,7 +32,7 @@ class _PillReminderPage extends State<PillReminderPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Pill Reminder Page"),
+              title: const Text("Pill Reminder"),
             ),
             body: Center(child: ListView(children: <Widget>[
               Text("supportCount: $_supportCount"),
@@ -43,15 +43,16 @@ class _PillReminderPage extends State<PillReminderPage> {
               Text("reminderTimeList: $_reminderTimeList"),
 
               ElevatedButton(
-                  onPressed: () => setState(() async {
+                  onPressed: ()async  {
                     _pillReminderCallback = await _blePlugin.queryPillReminder;
+                    setState(() {
                     _supportCount = _pillReminderCallback!.supportCount;
                     _id = _pillReminderCallback!.list[0].id;
                     _dateOffset = _pillReminderCallback!.list[0].dateOffset;
                     _name = _pillReminderCallback!.list[0].name;
                     _repeat = _pillReminderCallback!.list[0].repeat;
                     _reminderTimeList = _pillReminderCallback!.list[0].reminderTimeList;
-                  }),
+                  });},
                   child: const Text("queryPillReminder()")),
               ElevatedButton(
                   onPressed: () =>

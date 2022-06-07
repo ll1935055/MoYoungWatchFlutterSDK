@@ -22,10 +22,8 @@ class _TrainingPage extends State<TrainingPage> {
   final MoYoungBle _blePlugin;
   final _streamSubscriptions = <StreamSubscription<dynamic>>[];
   Logger logger = Logger();
-  HistoryTrainList? _historyTrainList;
+  List<HistoryTrainList> _historyTrainList = [];
   TrainingInfo? _trainingInfo;
-  int _startTimeList = -1;
-  int _typeList = -1;
   int _typeInfo = -1;
   int _startTimeInfo = -1;
   int _endTime = -1;
@@ -34,6 +32,7 @@ class _TrainingPage extends State<TrainingPage> {
   int _distance = -1;
   int _calories = -1;
   List<int> _hrList = [];
+  int _type = -1;
 
   _TrainingPage(this._blePlugin);
 
@@ -46,21 +45,38 @@ class _TrainingPage extends State<TrainingPage> {
   void subscriptStream() {
     _streamSubscriptions.add(
       _blePlugin.trainingEveStm.listen(
-            (TrainBean event) {
+        (TrainBean event) {
           setState(() {
             logger.d("TrainingEveStm======" + event.toString());
-            _historyTrainList = event.historyTrainList;
-            _trainingInfo = event.trainingInfo;
-            _startTimeList = _historyTrainList!.startTime;
-            _typeList = _historyTrainList!.type;
-            _typeInfo = _trainingInfo!.type;
-            _startTimeInfo = _trainingInfo!.startTime;
-            _endTime = _trainingInfo!.endTime;
-            _validTime = _trainingInfo!.validTime;
-            _steps = _trainingInfo!.steps;
-            _distance = _trainingInfo!.distance;
-            _calories = _trainingInfo!.calories;
-            _hrList = _trainingInfo!.hrList;
+            switch (event.type) {
+              case TrainType.historyTrainingChange:
+                _historyTrainList = event.historyTrainList!;
+                break;
+              case TrainType.trainingChange:
+                _trainingInfo = event.trainingInfo;
+                _typeInfo = _trainingInfo!.type!;
+                _startTimeInfo = _trainingInfo!.startTime!;
+                _endTime = _trainingInfo!.endTime!;
+                _validTime = _trainingInfo!.validTime!;
+                _steps = _trainingInfo!.steps!;
+                _distance = _trainingInfo!.distance!;
+                _calories = _trainingInfo!.calories!;
+                _hrList = _trainingInfo!.hrList!;
+                break;
+              default:
+                break;
+            }
+          });
+        },
+      ),
+    );
+
+    _streamSubscriptions.add(
+      _blePlugin.trainingStateEveStm.listen(
+            (int event) {
+          setState(() {
+            logger.d("trainingStateEveStm======" + event.toString());
+            _type = event;
           });
         },
       ),
@@ -72,12 +88,11 @@ class _TrainingPage extends State<TrainingPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Training Page"),
+              title: const Text("Training"),
             ),
             body: Center(child: ListView(children: <Widget>[
               const Text("historyTrainList: as follows"),
-              Text("typeList: $_typeList"),
-              Text("startTimeList: $_startTimeList"),
+              Text("_historyTrainList: ${_historyTrainList.toString()}"),
               const Text("trainingInfo: as follows"),
               Text("typeInfo: $_typeInfo"),
               Text("startTimeInfo: $_startTimeInfo"),
@@ -87,6 +102,26 @@ class _TrainingPage extends State<TrainingPage> {
               Text("distance: $_distance"),
               Text("calories: $_calories"),
               Text("hrList: $_hrList"),
+              Text("type: $_type"),
+
+              ElevatedButton(
+                  onPressed: () => _blePlugin.startTraining(1),
+                  child: const Text("startTraining()")),
+              ElevatedButton(
+                  onPressed: () =>
+                      _blePlugin.setTrainingState(
+                          TrainingHeartRateStateType.trainingComplete),
+                  child: const Text("setTrainingState(-1)")),
+              ElevatedButton(
+                  onPressed: () =>
+                      _blePlugin.setTrainingState(
+                          TrainingHeartRateStateType.trainingPause),
+                  child: const Text("setTrainingState(-2)")),
+              ElevatedButton(
+                  onPressed: () =>
+                      _blePlugin.setTrainingState(
+                          TrainingHeartRateStateType.trainingContinue),
+                  child: const Text("setTrainingState(-3)")),
 
               ElevatedButton(
                   onPressed: () => _blePlugin.queryHistoryTraining,

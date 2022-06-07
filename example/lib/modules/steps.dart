@@ -20,6 +20,9 @@ class _StepsPage extends State<StepsPage> {
   final MoYoungBle _blePlugin;
   final _streamSubscriptions = <StreamSubscription<dynamic>>[];
   int _stepsChange = -1;
+  int _dateType = -1;
+  int _timeInterval = -1;
+  List _stepsList = [];
 
   _StepsPage(this._blePlugin);
 
@@ -44,7 +47,9 @@ class _StepsPage extends State<StepsPage> {
       _blePlugin.stepsDetailEveStm.listen(
             (StepsDetailBean event) {
           setState(() {
-
+            _dateType = event.dateType!;
+            _timeInterval = event.timeInterval!;
+            _stepsList = event.stepsList!;
           });
         },
       ),
@@ -64,12 +69,15 @@ class _StepsPage extends State<StepsPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Steps Page"),
+              title: const Text("Steps"),
             ),
             body: Center(
               child: ListView(
                 children: [
                   Text("StepsChange=" + _stepsChange.toString()),
+                  Text("dateType: $_dateType"),
+                  Text("timeInterval: $_timeInterval"),
+                  Text("stepsList: $_stepsList"),
 
                   ElevatedButton(
                       child: const Text('querySteps'),
@@ -78,7 +86,7 @@ class _StepsPage extends State<StepsPage> {
                       child: const Text('queryHistorySteps(todayStepsDetail)'),
                       onPressed: () => _blePlugin.queryHistorySteps(StepsDetailDateType.todayStepsDetail)),
                   ElevatedButton(
-                      child: const Text('queryHistorySteps(todayStepsDetail)'),
+                      child: const Text('queryStepsDetail(todayStepsDetail)'),
                       onPressed: () => _blePlugin.queryStepsDetail(StepsDetailDateType.todayStepsDetail)),
                 ],
               ),

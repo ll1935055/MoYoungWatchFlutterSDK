@@ -50,7 +50,7 @@ class _RSSIPage extends State<RSSIPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("RSSI Page"),
+              title: const Text("RSSI"),
             ),
             body: Center(child: ListView(children: <Widget>[
               Text("deviceRssi: $_deviceRssi"),

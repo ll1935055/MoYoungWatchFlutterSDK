@@ -117,7 +117,7 @@ packages:
     source: hosted
     version: "1.0.1"
   logger:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: logger
       url: "https://pub.flutter-io.cn"
@@ -150,7 +150,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.5"
+    version: "0.0.6"
   path:
     dependency: transitive
     description:

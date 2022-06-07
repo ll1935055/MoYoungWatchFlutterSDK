@@ -25,7 +25,7 @@ class _ShutDownPage extends State<ShutDownPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Shut Down Page"),
+              title: const Text("Shut Down"),
             ),
             body: Center(child: ListView(children: <Widget>[
               ElevatedButton(

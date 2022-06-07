@@ -27,9 +27,8 @@ class _BloodOxygenPage extends State<BloodOxygenPage> {
   int _bloodOxygen = -1;
   List<HistoryBloodOxygenBean> _historyList = [];
   BloodOxygenInfo? _continueBo;
-  int startTime = -1;
-  int timeInterval = -1;
-  int type = 0;
+  int _startTime = -1;
+  int _timeInterval = -1;
 
   _BloodOxygenPage(this._blePlugin);
 
@@ -44,18 +43,26 @@ class _BloodOxygenPage extends State<BloodOxygenPage> {
       _blePlugin.bloodOxygenEveStm.listen(
             (BloodOxygenBean event) {
           setState(() {
-            logger.d('connBloodOxygenEveStm:' + event.toString());
-            type = event.type;
-            print("type：" + type.toString());
-            switch(type){
-              case 1:_continueState = event.continueState!;break;
-              case 2:_timingMeasure = event.timingMeasure!;break;
-              case 3:_bloodOxygen = event.bloodOxygen!;break;
-              case 4:_historyList = event.historyList!;break;
-              case 5:_continueBo = event.continueBo!;
-                     startTime = _continueBo!.startTime!;
-                     timeInterval = _continueBo!.timeInterval!;
-                     break;
+            switch (event.type) {
+              case BloodOxygenType.continueState:
+                _continueState = event.continueState!;
+                break;
+              case BloodOxygenType.timingMeasure:
+                _timingMeasure = event.timingMeasure!;
+                break;
+              case BloodOxygenType.bloodOxygen:
+                _bloodOxygen = event.bloodOxygen!;
+                break;
+              case BloodOxygenType.historyList:
+                _historyList = event.historyList!;
+                break;
+              case BloodOxygenType.continueBO:
+                _continueBo = event.continueBo!;
+                _startTime = _continueBo!.startTime!;
+                _timeInterval = _continueBo!.timeInterval!;
+                break;
+              default:
+                break;
             }
           });
         },
@@ -68,15 +75,15 @@ class _BloodOxygenPage extends State<BloodOxygenPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Blood Oxygen Page"),
+              title: const Text("Blood Oxygen"),
             ),
             body: Center(child: ListView(children: <Widget>[
               Text("continueState: $_continueState"),
               Text("timingMeasure: $_timingMeasure"),
               Text("bloodOxygen: $_bloodOxygen"),
-              Text("historyList: $_historyList"),
-              Text("startTime: $startTime"),
-              Text("timeInterval: $timeInterval"),
+              Text("historyList[0]: $_historyList"),
+              Text("startTime: $_startTime"),
+              Text("timeInterval: $_timeInterval"),
 
               ElevatedButton(
                   child: const Text('startMeasureBloodOxygen'),

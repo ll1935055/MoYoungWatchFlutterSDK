@@ -28,7 +28,7 @@ class _BrightnessPage extends State<BrightnessPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Brightness Page"),
+              title: const Text("Brightness"),
             ),
             body: Center(child: ListView(children: <Widget>[
               Text("current: $_current"),
@@ -38,11 +38,12 @@ class _BrightnessPage extends State<BrightnessPage> {
                   onPressed: () => _blePlugin.sendBrightness(5),
                   child: const Text("sendBrightness(5)")),
               ElevatedButton(
-                  onPressed: () => setState(() async {
+                  onPressed: () async {
                     _brightnessBean = await _blePlugin.queryBrightness;
+                    setState(() {
                     _current = _brightnessBean!.current;
                     _max = _brightnessBean!.max;
-                  }),
+                  });},
                   child: const Text("queryBrightness()")),
             ])
             )

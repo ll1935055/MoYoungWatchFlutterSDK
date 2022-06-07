@@ -3,27 +3,33 @@ import 'package:moyoung_ble_plugin/moyoung_ble.dart';
 import 'package:logger/logger.dart';
 import 'dart:async';
 
-class HearRatePage extends StatefulWidget {
+class HeartRatePage extends StatefulWidget {
   final MoYoungBle blePlugin;
 
-  const HearRatePage({Key? key, required this.blePlugin}) : super(key: key);
+  const HeartRatePage({Key? key, required this.blePlugin}) : super(key: key);
 
   @override
-  State<HearRatePage> createState() {
+  State<HeartRatePage> createState() {
     return _HearRatePage(blePlugin);
   }
 }
 
-class _HearRatePage extends State<HearRatePage> {
+class _HearRatePage extends State<HeartRatePage> {
   final MoYoungBle _blePlugin;
   Logger logger = Logger();
   final _streamSubscriptions = <StreamSubscription<dynamic>>[];
   int _measuring = -1;
   int _onceMeasureComplete = -1;
   List<HistoryHeartRateBean> _historyHrList = [];
-  HeartRateInfo? _measureComplete;
+  MeasureCompleteBean? _measureComplete;
+  String _historyDynamicRateType = "";
   HeartRateInfo? _hour24MeasureResult;
+  int _startTime = -1;
+  List<int> _heartRateList = [];
+  int _timeInterval = -1;
+  String _heartRateType = "";
   List<TrainingHeartRateBean> _trainingList = [];
+  int _timingMeasure = -1;
 
   _HearRatePage(this._blePlugin);
 
@@ -36,14 +42,39 @@ class _HearRatePage extends State<HearRatePage> {
   void subscriptStream() {
     _streamSubscriptions.add(
       _blePlugin.heartRateEveStm.listen(
-        (event) {
+        (HeartRateBean event) {
           setState(() {
-            _measuring = event.measuring;
-            _onceMeasureComplete = event.onceMeasureComplete;
-            _historyHrList = event.historyHrList;
-            _measureComplete = event.measureComplete;
-            _hour24MeasureResult = event.hour24MeasureResult;
-            _trainingList = event.trainingList;
+            switch(event.type){
+              case HeartRateType.measuring:
+                _measuring = event.measuring!;
+                break;
+              case HeartRateType.onceMeasureComplete:
+                _onceMeasureComplete = event.onceMeasureComplete!;
+                break;
+              case HeartRateType.heartRate:
+                _historyHrList = event.historyHrList!;
+                break;
+              case HeartRateType.measureComplete:
+                _measureComplete = event.measureComplete!;
+                _historyDynamicRateType = _measureComplete!.historyDynamicRateType!;
+                _startTime = _measureComplete!.heartRate!.startTime;
+                _heartRateList = _measureComplete!.heartRate!.heartRateList;
+                _timeInterval = _measureComplete!.heartRate!.timeInterval;
+                _heartRateType = _measureComplete!.heartRate!.heartRateType;
+                break;
+              case HeartRateType.hourMeasureResult:
+                _hour24MeasureResult = event.hour24MeasureResult!;
+                _startTime = _hour24MeasureResult!.startTime;
+                _heartRateList = _hour24MeasureResult!.heartRateList;
+                _timeInterval = _hour24MeasureResult!.timeInterval;
+                _heartRateType = _hour24MeasureResult!.heartRateType;
+                break;
+              case HeartRateType.measureResult:
+                _trainingList = event.trainingList!;
+                break;
+              default:
+                break;
+            }
           });
         },
       ),
@@ -63,15 +94,19 @@ class _HearRatePage extends State<HearRatePage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Hear Rate Page"),
+              title: const Text("Hear Rate"),
             ),
             body: Center(child: ListView(children: [
               Text("measuring: $_measuring"),
               Text("onceMeasureComplete: $_onceMeasureComplete"),
-              Text("historyHrList: $_historyHrList"),
-              Text("measureComplete: $_measureComplete"),
-              Text("hour24MeasureResult: $_hour24MeasureResult"),
+              Text("historyHrList[0]: $_historyHrList"),
+              Text("historyDynamicRateType: $_historyDynamicRateType"),
+              Text("startTime: $_startTime"),
+              Text("heartRateList: $_heartRateList"),
+              Text("timeInterval: $_timeInterval"),
+              Text("heartRateType: $_heartRateType"),
               Text("trainingList: $_trainingList"),
+              Text("timingMeasure: $_timingMeasure"),
 
               ElevatedButton(
                   child: const Text('queryLastDynamicRate()'),
@@ -90,7 +125,12 @@ class _HearRatePage extends State<HearRatePage> {
                   onPressed: () => _blePlugin.disableTimingMeasureHeartRate),
               ElevatedButton(
                   child: const Text('queryTimingMeasureHeartRate()'),
-                  onPressed: () => _blePlugin.queryTimingMeasureHeartRate),
+                  onPressed: () async {
+                    int timingMeasure = await _blePlugin.queryTimingMeasureHeartRate;
+                    setState(() {
+                      _timingMeasure = timingMeasure;
+                    });
+                  }),
               ElevatedButton(
                   child: const Text(
                       'queryTodayHeartRate(TIMING_MEASURE_HEART_RATE)'),

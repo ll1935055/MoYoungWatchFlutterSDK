@@ -14,12 +14,7 @@ class AlarmPage extends StatefulWidget {
 
 class _AlarmPage extends State<AlarmPage> {
   final MoYoungBle _blePlugin;
-  bool _enable = false;
-  int _hour = -1;
-  int _id = -1;
-  int _minute = -1;
-  int _repeatMode = -1;
-  List<AlarmClockBean> list = [];
+  List<AlarmClockBean> _list = [];
 
   _AlarmPage(this._blePlugin);
 
@@ -28,15 +23,11 @@ class _AlarmPage extends State<AlarmPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Alarm Page"),
+              title: const Text("Alarm"),
             ),
             body: Center(
                 child: ListView(children: [
-                  Text("enable: $_enable"),
-                  Text("hour: $_hour"),
-                  Text("id: $_id"),
-                  Text("minute: $_minute"),
-                  Text("repeatMode: $_repeatMode"),
+                  Text("list: $_list"),
 
               ElevatedButton(
                   child: const Text('sendAlarmClock()'),
@@ -48,15 +39,11 @@ class _AlarmPage extends State<AlarmPage> {
                       repeatMode: AlarmClockBean.everyday))),
               ElevatedButton(
                   child: const Text('queryAllAlarmClock()'),
-                  onPressed: () async => {
-                  list = await _blePlugin.queryAllAlarm,
+                  onPressed: () async {
+                    List<AlarmClockBean> list = await _blePlugin.queryAllAlarm;
                     setState(() {
-                        _enable = list[0].enable;
-                        _hour = list[0].hour;
-                        _id = list[0].id;
-                        _minute = list[0].minute;
-                        _repeatMode = list[0].repeatMode;
-                      })}),
+                        _list = list;
+                      });}),
             ])
             )
         )

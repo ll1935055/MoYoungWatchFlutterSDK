@@ -18,11 +18,11 @@ class HandWashingReminderPage extends StatefulWidget {
 class _HandWashingReminderPage extends State<HandWashingReminderPage> {
   final MoYoungBle _blePlugin;
   HandWashingPeriodBean? _handWashingPeriodBean;
-  bool enable = false;
-  int startHour = -1;
-  int startMinute = -1;
-  int count = -1;
-  int period = -1;
+  bool _enable = false;
+  int _startHour = -1;
+  int _startMinute = -1;
+  int _count = -1;
+  int _period = -1;
 
   _HandWashingReminderPage(this._blePlugin);
 
@@ -31,14 +31,14 @@ class _HandWashingReminderPage extends State<HandWashingReminderPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Hand Washing Reminder Page"),
+              title: const Text("Hand Washing Reminder"),
             ),
             body: Center(child: ListView(children: <Widget>[
-              Text("enable: $enable"),
-              Text("startHour: $startHour"),
-              Text("startMinute: $startMinute"),
-              Text("count: $count"),
-              Text("period: $period"),
+              Text("enable: $_enable"),
+              Text("startHour: $_startHour"),
+              Text("startMinute: $_startMinute"),
+              Text("count: $_count"),
+              Text("period: $_period"),
 
               ElevatedButton(
                   onPressed: () =>
@@ -55,14 +55,15 @@ class _HandWashingReminderPage extends State<HandWashingReminderPage> {
                   onPressed: () => _blePlugin.disableHandWashingReminder,
                   child: const Text("disableHandWashingReminder()")),
               ElevatedButton(
-                  onPressed: () => setState(() async {
+                  onPressed: () async {
                     _handWashingPeriodBean = await _blePlugin.queryHandWashingReminderPeriod;
-                    enable = _handWashingPeriodBean!.enable;
-                    startHour = _handWashingPeriodBean!.startHour;
-                    startMinute = _handWashingPeriodBean!.startMinute;
-                    count = _handWashingPeriodBean!.count;
-                    period = _handWashingPeriodBean!.period;
-                  }),
+                    setState(() {
+                    _enable = _handWashingPeriodBean!.enable;
+                    _startHour = _handWashingPeriodBean!.startHour;
+                    _startMinute = _handWashingPeriodBean!.startMinute;
+                    _count = _handWashingPeriodBean!.count;
+                    _period = _handWashingPeriodBean!.period;
+                  });},
                   child: const Text("queryHandWashingReminderPeriod()")),
             ])
             )

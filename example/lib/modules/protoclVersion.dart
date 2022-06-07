@@ -26,15 +26,17 @@ class _ProtocolVersionPage extends State<ProtocolVersionPage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Protocol Version Page"),
+              title: const Text("Protocol Version"),
             ),
             body: Center(child: ListView(children: <Widget>[
               Text("protocolVersion: $_protocolVersion"),
 
               ElevatedButton(
-                  onPressed: () => setState(() async {
-                    _protocolVersion = await _blePlugin.getProtocolVersion;
-                  }),
+                  onPressed: () async {
+                    String protocolVersion = await _blePlugin.getProtocolVersion;
+                    setState(() {
+                    _protocolVersion = protocolVersion;
+                  });},
                   child: const Text("getProtocolVersion()")),
             ])
             )

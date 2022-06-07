@@ -25,7 +25,7 @@ class _UserInfoPage extends State<UserInfoPage> {
     return MaterialApp(
         home: Scaffold(
         appBar: AppBar(
-        title: const Text("UserInfo Page"),
+        title: const Text("UserInfo"),
     ),
     body: Center(
       child: ListView(

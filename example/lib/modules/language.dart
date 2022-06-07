@@ -14,7 +14,7 @@ class LanguagePage extends StatefulWidget {
 
 class _LanguagePage extends State<LanguagePage> {
   final MoYoungBle _blePlugin;
-  DeviceLanguageBean? deviceLanguageBean;
+  DeviceLanguageBean? _deviceLanguageBean;
   List<int> _languageType = [];
   int _type = -1;
 
@@ -25,7 +25,7 @@ class _LanguagePage extends State<LanguagePage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Language Page"),
+              title: const Text("Language"),
             ),
             body: Center(child: ListView(children: [
               Text("languageType: $_languageType"),
@@ -36,11 +36,12 @@ class _LanguagePage extends State<LanguagePage> {
                   onPressed: () => _blePlugin.sendDeviceLanguage(DeviceLanguageType.languageChinese)),
               ElevatedButton(
                   child: const Text('queryDeviceLanguage()'),
-                  onPressed: () => setState(() async {
-                    deviceLanguageBean = await _blePlugin.queryDeviceLanguage;
-                    _languageType = deviceLanguageBean!.languageType;
-                    _type = deviceLanguageBean!.type;
-                  })),
+                  onPressed: () async {
+                    _deviceLanguageBean = await _blePlugin.queryDeviceLanguage;
+                    setState(() {
+                    _languageType = _deviceLanguageBean!.languageType;
+                    _type = _deviceLanguageBean!.type;
+                  });}),
             ])
             )
         )

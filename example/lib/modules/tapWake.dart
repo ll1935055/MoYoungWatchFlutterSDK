@@ -26,22 +26,24 @@ class _TapWakePage extends State<TapWakePage> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Tap Wake Page"),
+              title: const Text("Tap Wake"),
             ),
             body: Center(child: ListView(children: <Widget>[
               Text("enable: $_enable"),
 
               ElevatedButton(
-                  onPressed: () => setState(() async {
-                    _enable = await _blePlugin.queryWakeState;
-                  }),
+                  onPressed: () async {
+                    bool enable =  await _blePlugin.queryWakeState;
+                    setState(() {
+                    _enable = enable;
+                  });},
                   child: const Text("queryWakeState()")),
               ElevatedButton(
                   onPressed: () => _blePlugin.sendWakeState(true),
                   child: const Text("sendWakeState(true)")),
               ElevatedButton(
                   onPressed: () => _blePlugin.sendWakeState(false),
-                  child: const Text("sendTapToWakeState(false)")),
+                  child: const Text("sendWakeState(false)")),
             ])
             )
         )
