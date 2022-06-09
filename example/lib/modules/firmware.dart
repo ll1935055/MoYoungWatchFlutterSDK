@@ -168,27 +168,27 @@ class _FirmwarePage extends State<FirmwarePage> {
       case 4:
       case 8:
       case 9:
-        _oTAType = OTAMcuType.otaFirst;
+        _oTAType = OTAMcuType.startHsOta;
         await _blePlugin
-            .startOTA(OtaBean(address: address, type: OTAMcuType.otaFirst));
+            .startOTA(OtaBean(address: address, type: OTAMcuType.startHsOta));
         break;
       case 7:
       case 11:
       case 71:
       case 72:
-        _oTAType = OTAMcuType.otaSecond;
+        _oTAType = OTAMcuType.startRtkOta;
         await _blePlugin
-            .startOTA(OtaBean(address: address, type: OTAMcuType.otaSecond));
+            .startOTA(OtaBean(address: address, type: OTAMcuType.startRtkOta));
         break;
       case 10:
-        _oTAType = OTAMcuType.otaThird;
+        _oTAType = OTAMcuType.startOta;
         await _blePlugin
-            .startOTA(OtaBean(address: address, type: OTAMcuType.otaThird));
+            .startOTA(OtaBean(address: address, type: OTAMcuType.startOta));
         break;
       default:
-        _oTAType = OTAMcuType.otaFour;
+        _oTAType = OTAMcuType.startDefaultOta;
         await _blePlugin
-            .startOTA(OtaBean(address: address, type: OTAMcuType.otaFour));
+            .startOTA(OtaBean(address: address, type: OTAMcuType.startDefaultOta));
         break;
     }
   }

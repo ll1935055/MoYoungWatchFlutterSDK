@@ -49,7 +49,7 @@ packages:
       name: cupertino_icons
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5"
   dio:
     dependency: "direct main"
     description:
@@ -147,10 +147,10 @@ packages:
   moyoung_ble_plugin:
     dependency: "direct main"
     description:
-      path: ".."
-      relative: true
-    source: path
-    version: "0.0.6"
+      name: moyoung_ble_plugin
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.1"
   path:
     dependency: transitive
     description:
@@ -164,7 +164,7 @@ packages:
       name: path_provider
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.0.10"
+    version: "2.0.11"
   path_provider_android:
     dependency: transitive
     description:
@@ -185,7 +185,7 @@ packages:
       name: path_provider_linux
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.1.6"
+    version: "2.1.7"
   path_provider_macos:
     dependency: transitive
     description:
@@ -206,7 +206,7 @@ packages:
       name: path_provider_windows
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.0.6"
+    version: "2.0.7"
   permission_handler:
     dependency: "direct main"
     description:

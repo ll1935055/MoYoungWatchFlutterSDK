@@ -36,7 +36,7 @@ class _ECGPage extends State<ECGPage> {
   void subscriptStream() {
     _streamSubscriptions.add(
       _blePlugin.ecgEveStm.listen(
-            (EgcBean event) {
+            (EcgBean event) {
           setState(() {
             switch(event.type){
               case ECGType.ecgChangeInts:

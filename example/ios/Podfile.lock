@@ -1,12 +1,12 @@
 PODS:
-  - Flutter (1.0.0)
-  - flutter_contacts (0.0.1):
+  - Flutter (2.10.5)
+  - flutter_contacts (1.1.4):
     - Flutter
-  - moyoung_ble_plugin (0.0.1):
+  - moyoung_ble_plugin (0.0.7):
     - Flutter
-  - path_provider_ios (0.0.1):
+  - path_provider_ios (2.0.10):
     - Flutter
-  - "permission_handler (5.1.0+2)":
+  - permission_handler (8.3.0):
     - Flutter
 
 DEPENDENCIES:
@@ -29,11 +29,11 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/permission_handler/ios"
 
 SPEC CHECKSUMS:
-  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  flutter_contacts: edb1c5ce76aa433e20e6cb14c615f4c0b66e0983
-  moyoung_ble_plugin: c4a4570d0c26aeb09fc1c038f3e0d4587ec02075
-  path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
-  permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
+  Flutter: ff3730d7f07cebcfcdef34852d8277875e922b0f
+  flutter_contacts: c181f2805ba5b5faf321f76e77bae190d4e3d2d2
+  moyoung_ble_plugin: d4a0f1552c2ed068b1add06dde530fe55ba45aff
+  path_provider_ios: 7ea54e8fd3facd4e768542721ed6a2995d99877e
+  permission_handler: 7d89757ac653ba4b0121af02210fecc7c346cb53
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
